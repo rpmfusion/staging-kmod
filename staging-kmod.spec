@@ -58,6 +58,10 @@ for kernel_version in %{?kernel_versions}; do
      VIDEO_GO7007)
        configops="CONFIG_${module}=m CONFIG_${module}_USB=m"
        ;;
+     SLICOSS)
+       # does not build on ppc as of 011109; tested with 2.6.30.9 and 2.6.31.5
+       ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
+       ;;
      **)
        configops="CONFIG_${module}=m"
        ;;
@@ -87,6 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sun Nov 01 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-1
 - update to 2.6.31.5
+- disable SLICOSS on ppc* due to build errors
 
 * Fri Oct 23 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.30.8-2
 - enable VIDEO_GO7007
