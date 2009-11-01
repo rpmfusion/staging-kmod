@@ -6,11 +6,11 @@
 %define buildforkernels newest
 
 # which drivers to built
-%global stgdrvs AGNX ASUS_OLED EPL ET131X HECI LINE6_USB RT2860 RT2870 RT3070 RTL8187SE SLICOSS W35UND PRISM2_USB VIDEO_GO7007
+%global stgdrvs AGNX ASUS_OLED EPL ET131X FB_UDL HECI LINE6_USB RT2860 RT2870 RT3070 RTL8187SE RTL8192SU SLICOSS W35UND PRISM2_USB VIDEO_GO7007 VT6655
 
 Name:          staging-kmod
 Version:       2.6.31.5
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -93,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-2
+- enable FB_UDL RTL8192SU VT6655
+
 * Sun Nov 01 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-1
 - update to 2.6.31.5
 - disable SLICOSS and PRISM2_USB on ppc* due to build errors
