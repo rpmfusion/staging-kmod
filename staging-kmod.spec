@@ -9,8 +9,8 @@
 %global stgdrvs AGNX ASUS_OLED EPL ET131X HECI LINE6_USB RT2860 RT2870 RT3070 RTL8187SE SLICOSS W35UND PRISM2_USB VIDEO_GO7007
 
 Name:          staging-kmod
-Version:       2.6.30.8
-Release:       2%{?dist}
+Version:       2.6.30.9
+Release:       1%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.30.9-1
+- update to 2.6.30.9
+
 * Fri Oct 23 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.30.8-2
 - enable VIDEO_GO7007
 
