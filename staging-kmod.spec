@@ -55,16 +55,20 @@ done
 for kernel_version in %{?kernel_versions}; do
  for module in %{stgdrvs} ; do 
    case "${module}" in
-     VIDEO_GO7007)
-       configops="CONFIG_${module}=m CONFIG_${module}_USB=m"
+     PRISM2_USB)
+       # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
+       ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
+       ;;
+     RTL8192SU)
+       # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
+       ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
        ;;
      SLICOSS)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.30.9 and 2.6.31.5
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
        ;;
-     PRISM2_USB)
-       # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
-       ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
+     VIDEO_GO7007)
+       configops="CONFIG_${module}=m CONFIG_${module}_USB=m"
        ;;
      **)
        configops="CONFIG_${module}=m"
@@ -95,6 +99,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sun Nov 01 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-2
 - enable FB_UDL RTL8192SU VT6655
+- disable RTL8192SU on ppc* due to build errors
 
 * Sun Nov 01 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-1
 - update to 2.6.31.5
