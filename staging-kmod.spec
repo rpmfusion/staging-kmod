@@ -10,7 +10,7 @@
 
 Name:          staging-kmod
 Version:       2.6.30.9
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 05 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.30.9-1.1
+- rebuild for new kernels
+
 * Sun Nov 01 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.30.9-1
 - update to 2.6.30.9
 - disable SLICOSS on ppc* due to build errors
