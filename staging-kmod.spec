@@ -3,14 +3,14 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-%define buildforkernels newest
+#define buildforkernels newest
 
 # which drivers to built
 %global stgdrvs AGNX ASUS_OLED EPL ET131X FB_UDL HECI LINE6_USB RT2860 RT2870 RT3070 RTL8187SE RTL8192SU SLICOSS W35UND PRISM2_USB VIDEO_GO7007 VT6655
 
 Name:          staging-kmod
 Version:       2.6.31.5
-Release:       2%{?dist}.3
+Release:       2%{?dist}.4
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-2.4
+- rebuild for F12 release kernel
+
 * Mon Nov 09 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-2.3
 - rebuild for new kernels
 
