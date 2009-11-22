@@ -3,7 +3,7 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-#define buildforkernels newest
+%define buildforkernels newest
 
 # which drivers to built
 %global stgdrvs AGNX ASUS_OLED EPL ET131X FB_UDL HECI LINE6_USB RT2860 RT2870 RT3070 RTL8187SE RTL8192SU SLICOSS W35UND PRISM2_USB VIDEO_GO7007 VT6655
