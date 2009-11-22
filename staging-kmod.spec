@@ -10,7 +10,7 @@
 
 Name:          staging-kmod
 Version:       2.6.31.5
-Release:       2%{?dist}.4
+Release:       2%{?dist}.5
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -21,9 +21,6 @@ Source0:       linux-staging-%{version}.tar.bz2
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{_bindir}/kmodtool
-
-# needed for plague to make sure it builds for i586 and i686
-ExclusiveArch:       i586 i686 x86_64 ppc ppc64
 
 # kmodtool does its magic here
 %{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-%{?buildforkernels:%{buildforkernels}}%{!?buildforkernels:current}-%{_target_cpu} }
@@ -97,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 22 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-2.5
+- rebuild for new kernel, disable i586 builds
+
 * Tue Nov 10 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-2.4
 - rebuild for F12 release kernel
 
