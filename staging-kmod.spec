@@ -6,18 +6,22 @@
 %define buildforkernels newest
 
 # which drivers to built
-%global stgdrvs AGNX ASUS_OLED EPL ET131X FB_UDL HECI LINE6_USB RT2860 RT2870 RT3070 RTL8187SE RTL8192SU SLICOSS W35UND PRISM2_USB VIDEO_GO7007 VT6655
+%global stgdrvs ASUS_OLED EPL ET131X FB_UDL HECI HYPERV LINE6_USB RT2860 RT2870 RT3070 RT3090 RTL8187SE RTL8192SU RTL8192E SLICOSS W35UND PRISM2_USB VIDEO_GO7007 VT6655 VT6656
+# todo: VIDEO_CX25821
+
+# makes handling for rc kernels a whole lot easier:
+%global prever rc8
 
 Name:          staging-kmod
-Version:       2.6.31.5
-Release:       2%{?dist}.5
+Version:       2.6.32
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
 License:       GPLv2
 URL:           http://www.kernel.org/
 # a script to create this archive is part of staging-kmod-addons
-Source0:       linux-staging-%{version}.tar.bz2
+Source0:       linux-staging-%{version}%{?prever:-%{prever}}.tar.bz2
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{_bindir}/kmodtool
@@ -40,21 +44,28 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} %{?buildfo
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise will get build
-sed -i 's|.*at76.*||' linux-staging-%{version}/drivers/staging/Makefile
+sed -i 's|.*at76.*||' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/Makefile
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
- cp -a linux-staging-%{version}/drivers/staging/ _kmod_build_${kernel_version%%___*}
+ cp -a linux-staging-%{version}%{?prever:-%{prever}}/ _kmod_build_${kernel_version%%___*}
 done
 
 
 %build
 for kernel_version in %{?kernel_versions}; do
  for module in %{stgdrvs} ; do 
+   configops="CONFIG_${module}=m"
    case "${module}" in
+     VIDEO_HYPERV)
+       configops="${configops} CONFIG_${module}_STORAGE=m CONFIG_${module}_BLOCK=m CONFIG_${module}_NET=m"
+       ;;
      PRISM2_USB)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
+       ;;
+     RT3090)
+       configops="${configops} -I ${PWD}/_kmod_build_${kernel_version%%___*}/"
        ;;
      RTL8192SU)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
@@ -65,13 +76,13 @@ for kernel_version in %{?kernel_versions}; do
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
        ;;
      VIDEO_GO7007)
-       configops="CONFIG_${module}=m CONFIG_${module}_USB=m"
+       configops="${configops} CONFIG_${module}_USB=m"
        ;;
-     **)
-       configops="CONFIG_${module}=m"
+     VIDEO_CX25821)
+       configops="${configops} CONFIG_${module}_ALSA=m"
        ;;
    esac
-   make %{?_smp_mflags} -C "${kernel_version##*___}" SUBDIRS=${PWD}/_kmod_build_${kernel_version%%___*}/ modules ${configops}
+   make %{?_smp_mflags} -C "${kernel_version##*___}" SUBDIRS=${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/ modules ${configops}
  done
 done
 
@@ -80,7 +91,7 @@ done
 rm -rf ${RPM_BUILD_ROOT}
 for kernel_version in %{?kernel_versions}; do
  mkdir -p ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
- install -D -m 755 _kmod_build_${kernel_version%%___*}/*/*.ko ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
+ install -D -m 755 _kmod_build_${kernel_version%%___*}/drivers/staging/*/*.ko ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
 done
 # akmods hint:
 # no akomds for now; packager is working on a solution where each driver will get its own akmod
@@ -94,6 +105,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 02 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.32-0.1.rc1
+- enable HYPERV, RT3090, RTL8192E, VT6656
+- drop AGNX, dropped upstream
+- point to drivers/staging/ explicitely 
+- support RC's better
+
 * Sun Nov 22 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-2.5
 - rebuild for new kernel, disable i586 builds
 
