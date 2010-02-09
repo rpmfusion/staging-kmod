@@ -10,7 +10,7 @@
 
 Name:          staging-kmod
 Version:       2.6.31.5
-Release:       2%{?dist}.11
+Release:       3%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -51,6 +51,7 @@ done
 %build
 for kernel_version in %{?kernel_versions}; do
  for module in %{stgdrvs} ; do 
+   configops="CONFIG_${module}=m"
    case "${module}" in
      PRISM2_USB)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
@@ -66,9 +67,6 @@ for kernel_version in %{?kernel_versions}; do
        ;;
      VIDEO_GO7007)
        configops="CONFIG_${module}=m CONFIG_${module}_USB=m"
-       ;;
-     **)
-       configops="CONFIG_${module}=m"
        ;;
    esac
    make %{?_smp_mflags} -C "${kernel_version##*___}" SUBDIRS=${PWD}/_kmod_build_${kernel_version%%___*}/ modules ${configops}
@@ -94,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 09 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-3.1
+- fix thinko that made some modules not getting build (#1076)
+
 * Sat Jan 30 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-2.11
 - rebuild for new kernel
 
