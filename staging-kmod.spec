@@ -10,7 +10,7 @@
 
 Name:          staging-kmod
 Version:       2.6.31.5
-Release:       3%{?dist}.1
+Release:       3%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 10 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-3.2
+- rebuild for new kernel
+
 * Tue Feb 09 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.31.5-3.1
 - fix thinko that made some modules not getting build (#1076)
 
