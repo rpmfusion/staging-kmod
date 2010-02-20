@@ -58,6 +58,7 @@ for kernel_version in %{?kernel_versions}; do
    configops="CONFIG_${module}=m"
    case "${module}" in
      VIDEO_HYPERV)
+       ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
        configops="${configops} CONFIG_${module}_STORAGE=m CONFIG_${module}_BLOCK=m CONFIG_${module}_NET=m"
        ;;
      PRISM2_USB)
@@ -106,6 +107,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sat Feb 20 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.32.8-1
 - update to 2.6.32.8 for updates-testing kernel
+- disable hv on ppc as it's useless and does not build
 
 * Sun Dec 02 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.32-0.1.rc1
 - enable HYPERV, RT3090, RTL8192E, VT6656
