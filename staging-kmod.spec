@@ -57,7 +57,7 @@ for kernel_version in %{?kernel_versions}; do
  for module in %{stgdrvs} ; do 
    configops="CONFIG_${module}=m"
    case "${module}" in
-     VIDEO_HYPERV)
+     HYPERV)
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
        configops="${configops} CONFIG_${module}_STORAGE=m CONFIG_${module}_BLOCK=m CONFIG_${module}_NET=m"
        ;;
