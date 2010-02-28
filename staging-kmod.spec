@@ -14,7 +14,7 @@
 
 Name:          staging-kmod
 Version:       2.6.32.8
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -105,6 +105,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Feb 28 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.32.8-1.2
+- rebuild for new kernel
+
 * Sat Feb 20 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.32.8-1
 - update to 2.6.32.8 for updates-testing kernel
 - disable hv on ppc as it's useless and does not build
