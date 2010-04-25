@@ -14,7 +14,7 @@
 
 Name:          staging-kmod
 Version:       2.6.33.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -111,6 +111,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Apr 25 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.33.2-1.1
+- rebuild for new kernel
+
 * Fri Apr 10 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.33.2-1
 - update to 2.6.33.2
 - enable RAMZSWAP R8187SE RTL8192U BATMAN_ADV SAMSUNG_LAPTOP
