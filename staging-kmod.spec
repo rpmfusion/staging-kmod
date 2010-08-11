@@ -15,7 +15,7 @@
 
 Name:          staging-kmod
 Version:       2.6.34.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -112,6 +112,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Aug 11 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.2
+- rebuild for new kernel
+
 * Sun Aug 08 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.1
 - update to 2.6.34.2, which is hitting updates-testing for F13
 - enable phison (#1338)
