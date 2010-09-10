@@ -15,7 +15,7 @@
 
 Name:          staging-kmod
 Version:       2.6.34.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.3
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.4
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -112,6 +112,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Sep 10 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.4
+- rebuild for new kernel
+
 * Sun Aug 29 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.3
 - rebuild for new kernel
 
