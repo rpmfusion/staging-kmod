@@ -6,16 +6,24 @@
 %define buildforkernels newest
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BATMAN_ADV ECHO EPL ET131X FB_UDL HECI HYPERV IDE_PHISON LINE6_USB RT2860 RT2870 RT3070 RT3090 RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U SAMSUNG_LAPTOP SLICOSS W35UND PRISM2_USB VIDEO_GO7007 VT6655 VT6656
+%global stgdrvs ASUS_OLED BATMAN_ADV ECHO EPL ET131X FB_UDL FB_XGI HECI HYPERV IDE_PHISON LINE6_USB RT2860 RT2870 RT3070 RT3090 RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U SAMSUNG_LAPTOP SLICOSS W35UND PRISM2_USB VIDEO_GO7007 VT6655 VT6656
 
-# todo: VIDEO_CX25821
+# avoid this error: 
+# /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
+%define debug_package %{nil}
+
+# todo:
+# VIDEO_CX25821 cx25821/ 
+# VIDEO_TM6000 tm6000/
+# VIDEO_DT3155 dt3155v4l/
+# CXT1E1 cxt1e1/
 
 # makes handling for rc kernels a whole lot easier:
 #global prever rc8
 
 Name:          staging-kmod
-Version:       2.6.34.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.7
+Version:       2.6.35.6
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -112,6 +120,11 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sat Oct 30 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.35.6-1
+- update to 2.6.35.6 for F14
+- enable FB_XGI
+- disable debuginfo generation to avoid a build problem 
+
 * Thu Oct 21 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.7
 - rebuild for new kernel
 
