@@ -3,18 +3,19 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-#define buildforkernels newest
+%define buildforkernels newest
 
 # which drivers to built
-%global stgdrvs ASUS_OLED EPL ET131X FB_UDL HECI HYPERV LINE6_USB RT2860 RT2870 RT3070 RT3090 RTL8187SE RTL8192SU RTL8192E SLICOSS W35UND PRISM2_USB VIDEO_GO7007 VT6655 VT6656
+%global stgdrvs ASUS_OLED BATMAN_ADV ECHO EPL ET131X FB_UDL HECI HYPERV IDE_PHISON LINE6_USB RT2860 RT2870 RT3070 RT3090 RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U SAMSUNG_LAPTOP SLICOSS W35UND PRISM2_USB VIDEO_GO7007 VT6655 VT6656
+
 # todo: VIDEO_CX25821
 
 # makes handling for rc kernels a whole lot easier:
-%global prever rc8
+#global prever rc8
 
 Name:          staging-kmod
-Version:       2.6.32
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Version:       2.6.34.2
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.7
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -43,8 +44,8 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} %{?buildfo
 # prepare
 %setup -q -c -T -a 0
 
-# disable drivers that are enabled in Fedora's kernel, as those otherweise will get build
-sed -i 's|.*at76.*||' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/Makefile
+# disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
+sed -i 's|.*at76.*||; s|.*WAVELAN.*||; s|.*PCMCIA_NETWAVE.*|| ; s|.CRYSTALH||' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/Makefile
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -57,12 +58,19 @@ for kernel_version in %{?kernel_versions}; do
  for module in %{stgdrvs} ; do 
    configops="CONFIG_${module}=m"
    case "${module}" in
-     VIDEO_HYPERV)
+     CX25821)
+       configops="${configops} CONFIG_CX25821_ALSA"
+       ;;
+     HYPERV)
+       ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
        configops="${configops} CONFIG_${module}_STORAGE=m CONFIG_${module}_BLOCK=m CONFIG_${module}_NET=m"
        ;;
      PRISM2_USB)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
+       ;;
+     RAMZSWAP)
+       configops="${configops} CONFIG_RAMZSWAP_STATS=y"
        ;;
      RT3090)
        configops="${configops} -I ${PWD}/_kmod_build_${kernel_version%%___*}/"
@@ -103,10 +111,38 @@ done
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-
 %changelog
-* Fri Oct 29 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.32-0.1.rc8.1
-- rebuild for F-14 kernel
+* Thu Oct 21 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.7
+- rebuild for new kernel
+
+* Sun Sep 19 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.6
+- rebuild for new kernel
+
+* Sat Sep 11 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.5
+- rebuild for new kernel
+
+* Fri Sep 10 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.4
+- rebuild for new kernel
+
+* Sun Aug 29 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.3
+- rebuild for new kernel
+
+* Wed Aug 11 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.2
+- rebuild for new kernel
+
+* Sun Aug 08 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.34.2-1.1
+- update to 2.6.34.2, which is hitting updates-testing for F13
+- enable phison (#1338)
+
+* Fri Apr 10 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.33.2-1
+- update to 2.6.33.2
+- enable RAMZSWAP R8187SE RTL8192U BATMAN_ADV SAMSUNG_LAPTOP
+- disable RTL8187SE (renamed)
+- disable WAVELAN.* and PCMCIA_NETWAVE, as they are enabled in Fedora
+
+* Sat Feb 20 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.32.8-1
+- update to 2.6.32.8 for updates-testing kernel
+- disable hv on ppc as it's useless and does not build
 
 * Sun Dec 02 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.32-0.1.rc1
 - enable HYPERV, RT3090, RTL8192E, VT6656
