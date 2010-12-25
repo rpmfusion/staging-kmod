@@ -6,7 +6,7 @@
 %define buildforkernels newest
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BATMAN_ADV ECHO EPL ET131X FB_UDL FB_XGI HECI HYPERV IDE_PHISON LINE6_USB RT2860 RT2870 RT3070 RT3090 RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U SAMSUNG_LAPTOP SLICOSS W35UND PRISM2_USB VIDEO_GO7007 VT6655 VT6656
+%global stgdrvs ASUS_OLED BATMAN_ADV ECHO EPL ET131X FB_UDL FB_XGI HECI HYPERV IDE_PHISON LINE6_USB RT2860 RT2870 RT3070 RT3090 RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U SAMSUNG_LAPTOP SLICOSS W35UND PRISM2_USB VT6655 VT6656
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -22,8 +22,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       2.6.35.6
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.6
+Version:       2.6.35.10
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -120,6 +120,10 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sat Dec 25 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.35.10-1
+- update to 2.6.35.10
+- disable VIDEO_GO7007, broken upstream
+
 * Fri Dec 24 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.35.6-1.6
 - rebuild for updated kernel
 
