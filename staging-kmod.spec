@@ -23,7 +23,7 @@
 
 Name:          staging-kmod
 Version:       2.6.35.10
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -120,6 +120,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sat Feb 12 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.35.10-1.1
+- rebuild for updated kernel
+
 * Sat Dec 25 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.35.10-1
 - update to 2.6.35.10
 - disable VIDEO_GO7007, broken upstream
