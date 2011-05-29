@@ -6,7 +6,7 @@
 %define buildforkernels newest
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BATMAN_ADV ECHO EPL ET131X FB_UDL FB_XGI HECI HYPERV IDE_PHISON LINE6_USB RT2860 RT2870 RT3070 RT3090 RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U SAMSUNG_LAPTOP SLICOSS W35UND PRISM2_USB VT6655 VT6656
+%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BCM_WIMAX BRCM80211 EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON LINE6_USB RT2860 RT2870 RT3070 RT3090 RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SAMSUNG_LAPTOP SBE_2T3E3 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 ZRAM 
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -23,7 +23,7 @@
 
 Name:          staging-kmod
 Version:       2.6.38.7
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -53,7 +53,10 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} %{?buildfo
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
-sed -i 's|.*at76.*||; s|.*WAVELAN.*||; s|.*PCMCIA_NETWAVE.*|| ; s|.CRYSTALH||' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/Makefile
+sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||;' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/Makefile
+
+# fix include for BRCM80211
+sed -i 's!-Idrivers/staging/brcm80211/!-I$(obj)/!' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/brcm80211/Makefile
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -66,8 +69,14 @@ for kernel_version in %{?kernel_versions}; do
  for module in %{stgdrvs} ; do 
    configops="CONFIG_${module}=m"
    case "${module}" in
+     BRCM80211)
+       configops="${configops} CONFIG_BRCM80211_PCI=y V=1"
+       ;;
      CX25821)
-       configops="${configops} CONFIG_CX25821_ALSA"
+       configops="${configops} CONFIG_CX25821_ALSA=m"
+       ;;
+     FT1000_USB)
+       configops="${configops} CONFIG_FT1000_USB=m CONFIG_FT1000_PCMCIA=m"
        ;;
      HYPERV)
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
@@ -86,6 +95,9 @@ for kernel_version in %{?kernel_versions}; do
      RTL8192SU)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
+       ;;
+     R8712U)
+       configops="${configops} CONFIG_R8712_AP=y"
        ;;
      SLICOSS)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.30.9 and 2.6.31.5
@@ -120,6 +132,12 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun May 29 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.38.7-2.1
+- Enable ATH6K_LEGACY BCM_WIMAX BRCM80211 EASYCAP FT1000_USB R8712U SBE_2T3E3
+  SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4
+  USB_ENESTORAGE ZRAM
+- disable a few drivers in Makefile as Fedora ships them 
+
 * Sat May 28 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.38.7-1.1
 - rebuild for updated kernel
 
