@@ -23,7 +23,7 @@
 
 Name:          staging-kmod
 Version:       2.6.38.7
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -132,6 +132,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sat Jun 04 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.38.7-2.2
+- rebuild for updated kernel
+
 * Sun May 29 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.38.7-2.1
 - Enable ATH6K_LEGACY BCM_WIMAX BRCM80211 EASYCAP FT1000_USB R8712U SBE_2T3E3
   SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4
