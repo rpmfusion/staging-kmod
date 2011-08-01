@@ -1,28 +1,25 @@
-# buildforkernels macro hint: when you build a new version or a new release
-# that contains bugfixes or other improvements then you must disable the
-# "buildforkernels newest" macro for just that build; immediately after
-# queuing that build enable the macro again for subsequent builds; that way
-# a new akmod package will only get build when a new one is actually needed
-%define buildforkernels newest
+# akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BCM_WIMAX BRCM80211 EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON LINE6_USB RT2860 RT2870 RT3070 RT3090 RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SAMSUNG_LAPTOP SBE_2T3E3 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 ZRAM 
+%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BRCMSMAC BRCMFMAC BCM_WIMAX DRM_PSB EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SBE_2T3E3 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
 %define debug_package %{nil}
 
-# todo:
-# VIDEO_CX25821 cx25821/ 
-# VIDEO_TM6000 tm6000/
-# VIDEO_DT3155 dt3155v4l/
-# CXT1E1 cxt1e1/
+# todo?
+# VIDEO_CX25821
+# VIDEO_TM6000
+# VIDEO_DT3155 
+# CXT1E1 
+# USBIP_CORE
+# DVB_CXD2099
 
 # makes handling for rc kernels a whole lot easier:
 #global prever rc8
 
 Name:          staging-kmod
-Version:       2.6.38.7
+Version:       2.6.40
 Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.5
 Summary:       Selected kernel modules from linux-staging
 
@@ -56,7 +53,7 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} %{?buildfo
 sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||;' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/Makefile
 
 # fix include for BRCM80211
-sed -i 's!-Idrivers/staging/brcm80211/!-I$(obj)/!' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/brcm80211/Makefile
+sed -i 's!-Idrivers/staging/brcm80211/!-I$(obj)/../!' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/brcm80211/*/Makefile
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -69,8 +66,8 @@ for kernel_version in %{?kernel_versions}; do
  for module in %{stgdrvs} ; do 
    configops="CONFIG_${module}=m"
    case "${module}" in
-     BRCM80211)
-       configops="${configops} CONFIG_BRCM80211_PCI=y V=1"
+     BRCM?MAC)
+       configops="${configops} CONFIG_BRCMUTIL=y	"
        ;;
      CX25821)
        configops="${configops} CONFIG_CX25821_ALSA=m"
@@ -110,7 +107,15 @@ for kernel_version in %{?kernel_versions}; do
        configops="${configops} CONFIG_${module}_ALSA=m"
        ;;
    esac
+
    make %{?_smp_mflags} -C "${kernel_version##*___}" SUBDIRS=${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/ modules ${configops}
+
+   case "${module}" in
+     BRCM?MAC)
+       # move modules down one level to catch them during install
+       mv ${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/brcm80211/*/*.ko ${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/brcm80211/
+       ;;
+   esac
  done
 done
 
@@ -132,6 +137,12 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Aug 01 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.40-1
+- update to 3.0 aka 2.6.40
+- Enable BRCMSMAC, BRCMFMAC, DRM_PSB, INTEL_MEI, RTS_PSTOR, XVMALLOC, ZCACHE 
+- Drop RT2860, RT2870, RT3070, RT3090, SAMSUNG_LAPTOP dropped upstream
+- some adjustments for stupid brcm drivers that were renamed
+
 * Sun Jul 31 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.38.7-2.5
 - rebuild for updated kernel
 
