@@ -33,8 +33,8 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{_bindir}/kmodtool
 
 # kmodtool does its magic here
-%{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-%{?buildforkernels:%{buildforkernels}}%{!?buildforkernels:current}-%{_target_cpu} }
-%{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null) }
+%{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-newest-%{_target_cpu} }
+%{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{name} --newest %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null) }
 
 
 %description
@@ -44,7 +44,7 @@ Selected kernel modules from linux-staging
 %prep
 # kmodtool check and debug output:
 %{?kmodtool_check}
-kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
+kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
 
 # prepare
 %setup -q -c -T -a 0
@@ -139,6 +139,8 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Aug 01 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.40-3
 - bump release to 3 to avoid tagging problems in cvs
+- make it obvious that akmods are not supported and remove buildforkernels
+  variable to avoid mistakes
 
 * Mon Aug 01 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.40-1
 - update to 3.0 aka 2.6.40
