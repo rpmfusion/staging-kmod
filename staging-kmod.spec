@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BRCMSMAC BRCMFMAC BCM_WIMAX DRM_PSB EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SBE_2T3E3 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
+%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BRCMUTIL BCM_WIMAX DRM_PSB EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SBE_2T3E3 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       2.6.40
-Release:       %{?prever:0.}3%{?prever:.%{prever}}%{?dist}
+Release:       %{?prever:0.}4%{?prever:.%{prever}}%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -66,8 +66,8 @@ for kernel_version in %{?kernel_versions}; do
  for module in %{stgdrvs} ; do 
    configops="CONFIG_${module}=m"
    case "${module}" in
-     BRCM?MAC)
-       configops="${configops} CONFIG_BRCMUTIL=y	"
+     BRCMUTIL)
+       configops="${configops} CONFIG_BRCMSMAC=m CONFIG_BRCMFMAC=m"
        ;;
      CX25821)
        configops="${configops} CONFIG_CX25821_ALSA=m"
@@ -111,7 +111,7 @@ for kernel_version in %{?kernel_versions}; do
    make %{?_smp_mflags} -C "${kernel_version##*___}" SUBDIRS=${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/ modules ${configops}
 
    case "${module}" in
-     BRCM?MAC)
+     BRCMUTIL)
        # move modules down one level to catch them during install
        mv ${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/brcm80211/*/*.ko ${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/brcm80211/
        ;;
@@ -137,6 +137,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Aug 05 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.40-4
+- fix BRCM drivers by building their util module for real
+
 * Mon Aug 01 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.40-3
 - bump release to 3 to avoid tagging problems in cvs
 - make it obvious that akmods are not supported and remove buildforkernels
