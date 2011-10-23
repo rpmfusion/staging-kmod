@@ -3,7 +3,7 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-%define buildforkernels newest
+%define buildforkernels current
 
 # which drivers to built
 %global stgdrvs ASUS_OLED BATMAN_ADV ECHO EPL ET131X FB_UDL FB_XGI HECI HYPERV IDE_PHISON LINE6_USB RT2860 RT2870 RT3070 RT3090 RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U SAMSUNG_LAPTOP SLICOSS W35UND PRISM2_USB VT6655 VT6656
@@ -23,7 +23,7 @@
 
 Name:          staging-kmod
 Version:       2.6.38.7
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -120,6 +120,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Oct 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.38.7-1.1
+- Rebuild for F-16 kernel
+
 * Tue May 24 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.36.7-1
 - Update to 2.6.38.7
 
