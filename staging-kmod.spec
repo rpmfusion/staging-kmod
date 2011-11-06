@@ -21,7 +21,7 @@
 
 Name:          staging-kmod
 Version:       3.1
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -138,7 +138,7 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Sun Nov 06 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-1.1
+* Sun Nov 06 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-1.2
 - update to 3.1 (no new drivers)
 
 * Fri Aug 05 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.40-4
