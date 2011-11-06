@@ -1,28 +1,26 @@
-# buildforkernels macro hint: when you build a new version or a new release
-# that contains bugfixes or other improvements then you must disable the
-# "buildforkernels newest" macro for just that build; immediately after
-# queuing that build enable the macro again for subsequent builds; that way
-# a new akmod package will only get build when a new one is actually needed
-%define buildforkernels current
+# akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BATMAN_ADV ECHO EPL ET131X FB_UDL FB_XGI HECI HYPERV IDE_PHISON LINE6_USB RT2860 RT2870 RT3070 RT3090 RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U SAMSUNG_LAPTOP SLICOSS W35UND PRISM2_USB VT6655 VT6656
+%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BRCMUTIL BCM_WIMAX DRM_PSB EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SBE_2T3E3 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
+
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
 %define debug_package %{nil}
 
-# todo:
-# VIDEO_CX25821 cx25821/ 
-# VIDEO_TM6000 tm6000/
-# VIDEO_DT3155 dt3155v4l/
-# CXT1E1 cxt1e1/
+# todo?
+# VIDEO_CX25821
+# VIDEO_TM6000
+# VIDEO_DT3155 
+# CXT1E1 
+# USBIP_CORE
+# DVB_CXD2099
 
 # makes handling for rc kernels a whole lot easier:
 #global prever rc8
 
 Name:          staging-kmod
-Version:       2.6.38.7
+Version:       3.1
 Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
@@ -36,8 +34,8 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{_bindir}/kmodtool
 
 # kmodtool does its magic here
-%{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-%{?buildforkernels:%{buildforkernels}}%{!?buildforkernels:current}-%{_target_cpu} }
-%{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null) }
+%{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-newest-%{_target_cpu} }
+%{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{name} --newest %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null) }
 
 
 %description
@@ -47,13 +45,16 @@ Selected kernel modules from linux-staging
 %prep
 # kmodtool check and debug output:
 %{?kmodtool_check}
-kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
+kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
 
 # prepare
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
-sed -i 's|.*at76.*||; s|.*WAVELAN.*||; s|.*PCMCIA_NETWAVE.*|| ; s|.CRYSTALH||' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/Makefile
+sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||;' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/Makefile
+
+# fix include for BRCM80211
+sed -i 's!-Idrivers/staging/brcm80211/!-I$(obj)/../!' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/brcm80211/*/Makefile
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -66,8 +67,14 @@ for kernel_version in %{?kernel_versions}; do
  for module in %{stgdrvs} ; do 
    configops="CONFIG_${module}=m"
    case "${module}" in
+     BRCMUTIL)
+       configops="${configops} CONFIG_BRCMSMAC=m CONFIG_BRCMFMAC=m"
+       ;;
      CX25821)
-       configops="${configops} CONFIG_CX25821_ALSA"
+       configops="${configops} CONFIG_CX25821_ALSA=m"
+       ;;
+     FT1000_USB)
+       configops="${configops} CONFIG_FT1000_USB=m CONFIG_FT1000_PCMCIA=m"
        ;;
      HYPERV)
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
@@ -87,6 +94,9 @@ for kernel_version in %{?kernel_versions}; do
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
        ;;
+     R8712U)
+       configops="${configops} CONFIG_R8712_AP=y"
+       ;;
      SLICOSS)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.30.9 and 2.6.31.5
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
@@ -98,7 +108,15 @@ for kernel_version in %{?kernel_versions}; do
        configops="${configops} CONFIG_${module}_ALSA=m"
        ;;
    esac
+
    make %{?_smp_mflags} -C "${kernel_version##*___}" SUBDIRS=${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/ modules ${configops}
+
+   case "${module}" in
+     BRCMUTIL)
+       # move modules down one level to catch them during install
+       mv ${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/brcm80211/*/*.ko ${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/brcm80211/
+       ;;
+   esac
  done
 done
 
@@ -120,8 +138,43 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Sun Oct 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.38.7-1.1
-- Rebuild for F-16 kernel
+* Sun Nov 06 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-1.1
+- update to 3.1 (no new drivers)
+
+* Fri Aug 05 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.40-4
+- fix BRCM drivers by building their util module for real
+
+* Mon Aug 01 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.40-3
+- bump release to 3 to avoid tagging problems in cvs
+- make it obvious that akmods are not supported and remove buildforkernels
+  variable to avoid mistakes
+
+* Mon Aug 01 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.40-1
+- update to 3.0 aka 2.6.40
+- Enable BRCMSMAC, BRCMFMAC, DRM_PSB, INTEL_MEI, RTS_PSTOR, XVMALLOC, ZCACHE 
+- Drop RT2860, RT2870, RT3070, RT3090, SAMSUNG_LAPTOP dropped upstream
+- some adjustments for stupid brcm drivers that were renamed
+
+* Sun Jul 31 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.38.7-2.5
+- rebuild for updated kernel
+
+* Tue Jul 12 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.38.7-2.4
+- Rebuild for updated kernel
+
+* Wed Jun 15 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.38.7-2.3
+- rebuild for updated kernel
+
+* Sat Jun 04 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.38.7-2.2
+- rebuild for updated kernel
+
+* Sun May 29 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.38.7-2.1
+- Enable ATH6K_LEGACY BCM_WIMAX BRCM80211 EASYCAP FT1000_USB R8712U SBE_2T3E3
+  SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4
+  USB_ENESTORAGE ZRAM
+- disable a few drivers in Makefile as Fedora ships them 
+
+* Sat May 28 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.38.7-1.1
+- rebuild for updated kernel
 
 * Tue May 24 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.36.7-1
 - Update to 2.6.38.7
