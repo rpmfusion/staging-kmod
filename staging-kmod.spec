@@ -1,8 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BRCMUTIL BCM_WIMAX DRM_PSB EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SBE_2T3E3 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
-
+%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BCM_WIMAX DRM_PSB EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SBE_2T3E3 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -21,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.1
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -67,9 +66,6 @@ for kernel_version in %{?kernel_versions}; do
  for module in %{stgdrvs} ; do 
    configops="CONFIG_${module}=m"
    case "${module}" in
-     BRCMUTIL)
-       configops="${configops} CONFIG_BRCMSMAC=m CONFIG_BRCMFMAC=m"
-       ;;
      CX25821)
        configops="${configops} CONFIG_CX25821_ALSA=m"
        ;;
@@ -138,6 +134,10 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Nov 13 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-2.1
+- Drop brcm80211 drivers; included in Fedora kernels since 3.1.1-1.rc1 with 
+  changelog-enty "Backport brcm80211 from 3.2-rc1"
+
 * Sun Nov 06 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-1.1
 - update to 3.1 (no new drivers)
 
