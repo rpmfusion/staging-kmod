@@ -23,7 +23,7 @@
 
 Name:          staging-kmod
 Version:       2.6.35.10
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.11
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.12
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -120,6 +120,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Nov 24 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.35.10-1.12
+- rebuild for updated kernel
+
 * Wed Nov 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.35.10-1.11
 - rebuild for updated kernel
 
