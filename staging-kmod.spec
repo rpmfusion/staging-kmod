@@ -19,13 +19,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-<<<<<<< staging-kmod.spec
-Version:       2.6.40
-Release:       %{?prever:0.}4%{?prever:.%{prever}}%{?dist}.10
-=======
 Version:       3.1
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
->>>>>>> 1.31
+Release:       %{?prever:0.}4%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -139,35 +134,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Tue Dec 13 2011 Nicolas Chauvet <kwizart@gmail.com>
-- rebuild for updated kernel
-
-* Thu Dec 01 2011 Nicolas Chauvet <kwizart@gmail.com>
-- rebuild for updated kernel
-
-* Wed Nov 23 2011 Nicolas Chauvet <kwizart@gmail.com>
-- rebuild for updated kernel
-
-<<<<<<< staging-kmod.spec
-* Sun Nov 13 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.40-4.7
-- rebuild for updated kernel
-
-* Wed Nov 02 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.40-4.6
-- rebuild for updated kernel
-
-* Sun Oct 30 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.40-4.5
-- rebuild for updated kernel
-
-* Wed Oct 19 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.40-4.4
-- rebuild for updated kernel
-
-* Fri Oct 07 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.6.40-4.3
-- rebuild for updated kernel
-=======
 * Sun Nov 13 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-2.1
 - Drop brcm80211 drivers; included in Fedora kernels since 3.1.1-1.rc1 with 
   changelog-enty "Backport brcm80211 from 3.2-rc1"
->>>>>>> 1.31
 
 * Sun Nov 06 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-1.1
 - update to 3.1 (no new drivers)
