@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.1
-Release:       %{?prever:0.}4%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}4%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -134,6 +134,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Dec 13 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-4.2
+- rebuild for updated kernel
+
 * Sun Nov 13 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-2.1
 - Drop brcm80211 drivers; included in Fedora kernels since 3.1.1-1.rc1 with 
   changelog-enty "Backport brcm80211 from 3.2-rc1"
