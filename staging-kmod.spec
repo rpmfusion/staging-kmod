@@ -21,7 +21,7 @@
 Name:          staging-kmod
 <<<<<<< staging-kmod.spec
 Version:       2.6.40
-Release:       %{?prever:0.}4%{?prever:.%{prever}}%{?dist}.9
+Release:       %{?prever:0.}4%{?prever:.%{prever}}%{?dist}.10
 =======
 Version:       3.1
 Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
@@ -139,6 +139,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Dec 13 2011 Nicolas Chauvet <kwizart@gmail.com>
+- rebuild for updated kernel
+
 * Thu Dec 01 2011 Nicolas Chauvet <kwizart@gmail.com>
 - rebuild for updated kernel
 
