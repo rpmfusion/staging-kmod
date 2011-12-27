@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BCM_WIMAX DRM_PSB EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SBE_2T3E3 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
+%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BCM_WIMAX DRM_PSB EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.1
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.9
+Release:       %{?prever:0.}3%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -134,6 +134,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Dec 27 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-3.1
+- disable SBE_2T3E3, leads to missing symbols (#2107)
+
 * Fri Dec 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-2.9
 - rebuild for updated kernel
 
