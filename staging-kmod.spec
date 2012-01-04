@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.1
-Release:       %{?prever:0.}5%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}5%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -134,6 +134,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Jan 04 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-5.2
+- rebuild for updated kernel
+
 * Tue Dec 27 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-5.1
 - disable SBE_2T3E3, leads to missing symbols (#2107)
 
