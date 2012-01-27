@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.2.1
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -131,6 +131,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Jan 27 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.2
+- rebuild for updated kernel
+
 * Tue Jan 24 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.2.1-1.1
 - update to 3.2.1
 - drop ATH6K_LEGACY (replaced by a proper driver)
