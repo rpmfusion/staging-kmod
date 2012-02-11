@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED ATH6K_LEGACY BATMAN_ADV BCM_WIMAX DRM_PSB EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
+%global stgdrvs ASUS_OLED BCM_WIMAX EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U RTS5139 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -19,8 +19,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.1
-Release:       %{?prever:0.}5%{?prever:.%{prever}}%{?dist}.7
+Version:       3.2.1
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -51,9 +51,6 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
 sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||;' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/Makefile
-
-# fix include for BRCM80211
-sed -i 's!-Idrivers/staging/brcm80211/!-I$(obj)/../!' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/brcm80211/*/Makefile
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -134,34 +131,49 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Thu Feb 09 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-5.7
+* Tue Jan 24 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.2.1-1.1
+- update to 3.2.1
+- drop ATH6K_LEGACY (replaced by a proper driver)
+- drop DRM_PSB (enabled in Fedora)
+- add RTS5139
+
+* Tue Jan 24 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-3.5
 - rebuild for updated kernel
 
-* Fri Feb 03 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-5.6
+* Sun Jan 15 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-3.4
 - rebuild for updated kernel
 
-* Tue Jan 24 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-5.5
+* Mon Jan 09 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-3.3
 - rebuild for updated kernel
 
-* Sun Jan 15 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-5.4
+* Wed Jan 04 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-3.2
 - rebuild for updated kernel
 
-* Mon Jan 09 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-5.3
-- rebuild for updated kernel
-
-* Wed Jan 04 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.1-5.2
-- rebuild for updated kernel
-
-* Tue Dec 27 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-5.1
+* Tue Dec 27 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-3.1
 - disable SBE_2T3E3, leads to missing symbols (#2107)
 
-* Fri Dec 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-4.4
+* Fri Dec 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-2.9
 - rebuild for updated kernel
 
-* Sat Dec 17 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-4.3
+* Sat Dec 17 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-2.8
 - rebuild for updated kernel
 
-* Tue Dec 13 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-4.2
+* Tue Dec 13 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-2.7
+- rebuild for updated kernel
+
+* Sat Dec 10 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-2.6
+- rebuild for updated kernel
+
+* Thu Dec 01 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-2.5
+- rebuild for updated kernel
+
+* Wed Nov 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-2.4
+- rebuild for updated kernel
+
+* Wed Nov 16 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-2.3
+- rebuild for updated kernel
+
+* Mon Nov 14 2011 Nicolas Chauvet <kwizart@gmail.com> - 3.1-2.2
 - rebuild for updated kernel
 
 * Sun Nov 13 2011 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.1-2.1
