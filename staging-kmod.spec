@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BCM_WIMAX EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI HYPERV IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U RTS5139 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
+%global stgdrvs ASUS_OLED BCM_WIMAX EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U RTS5139 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -19,8 +19,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.2.1
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.12
+Version:       3.3
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -68,10 +68,6 @@ for kernel_version in %{?kernel_versions}; do
        ;;
      FT1000_USB)
        configops="${configops} CONFIG_FT1000_USB=m CONFIG_FT1000_PCMCIA=m"
-       ;;
-     HYPERV)
-       ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
-       configops="${configops} CONFIG_${module}_STORAGE=m CONFIG_${module}_BLOCK=m CONFIG_${module}_NET=m"
        ;;
      PRISM2_USB)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
@@ -131,38 +127,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Wed Mar 21 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.12
-- rebuild for updated kernel
-
-* Sat Mar 17 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.11
-- rebuild for updated kernel
-
-* Thu Mar 15 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.10
-- rebuild for updated kernel
-
-* Thu Mar 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.9
-- rebuild for updated kernel
-
-* Fri Mar 02 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.8
-- rebuild for updated kernel
-
-* Thu Mar 01 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.7
-- rebuild for updated kernel
-
-* Wed Feb 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.6
-- rebuild for updated kernel
-
-* Tue Feb 14 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.5
-- rebuild for updated kernel
-
-* Thu Feb 09 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.4
-- rebuild for updated kernel
-
-* Fri Feb 03 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.3
-- rebuild for updated kernel
-
-* Fri Jan 27 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.2.1-1.2
-- rebuild for updated kernel
+* Wed Mar 21 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.3-1.1
+- update to 3.3
+- disable the HV driver, as HYPERV is not set in Fedora
 
 * Tue Jan 24 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.2.1-1.1
 - update to 3.2.1
