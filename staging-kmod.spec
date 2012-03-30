@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.3
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -127,6 +127,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Mar 30 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.2
+- rebuild for updated kernel
+
 * Wed Mar 21 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.3-1.1
 - update to 3.3
 - disable the HV driver, as HYPERV is not set in Fedora
