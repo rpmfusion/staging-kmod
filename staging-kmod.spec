@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.3
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.6
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -50,7 +50,7 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
-sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||;' linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/Makefile
+sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -86,6 +86,9 @@ for kernel_version in %{?kernel_versions}; do
      R8712U)
        configops="${configops} CONFIG_R8712_AP=y"
        ;;
+     RTL8192E)
+       configops="${configops} CONFIG_RTLLIB=m RTLLIB_CRYPTO_CCMP=m RTLLIB_CRYPTO_TKIP=m RTLLIB_CRYPTO_WEP=m "
+       ;;
      SLICOSS)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.30.9 and 2.6.31.5
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
@@ -114,7 +117,7 @@ done
 rm -rf ${RPM_BUILD_ROOT}
 for kernel_version in %{?kernel_versions}; do
  mkdir -p ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
- install -D -m 755 _kmod_build_${kernel_version%%___*}/drivers/staging/*/*.ko ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
+ install -D -m 755 -t ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/ $(find _kmod_build_${kernel_version%%___*}/drivers/staging/ -name '*.ko')
 done
 # akmods hint:
 # no akomds for now; packager is working on a solution where each driver will get its own akmod
@@ -127,20 +130,10 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Sun Apr 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.6
-- rebuild for updated kernel
-
-* Sat Apr 14 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.5
-- rebuild for updated kernel
-
-* Thu Apr 12 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.4
-- rebuild for updated kernel
-
-* Tue Apr 03 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.3
-- rebuild for updated kernel
-
-* Fri Mar 30 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.2
-- rebuild for updated kernel
+* Mon Apr 30 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.3-2.1
+- make a few things more robust for drivers that have subdirectories (fixes 
+  #2265)
+- enbable a few options r8192e driver needs since 3.3 
 
 * Wed Mar 21 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.3-1.1
 - update to 3.3
