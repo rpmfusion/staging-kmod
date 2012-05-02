@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.3
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -130,6 +130,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed May 02 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-2.2
+- rebuild for updated kernel
+
 * Mon Apr 30 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.3-2.1
 - make a few things more robust for drivers that have subdirectories (fixes 
   #2265)
