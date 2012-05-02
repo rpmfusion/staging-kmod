@@ -20,7 +20,11 @@
 
 Name:          staging-kmod
 Version:       3.3
+<<<<<<< staging-kmod.spec
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.9
+=======
 Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
+>>>>>>> 1.51
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -130,10 +134,36 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed May 02 2012 Nicolas Chauvet <kwizart@gmail.com>
+- rebuild for updated kernel
+
+<<<<<<< staging-kmod.spec
+* Wed May 02 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.8
+- rebuild for updated kernel
+
+* Sun Apr 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.7
+- rebuild for updated kernel
+
+* Mon Apr 16 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.6
+- rebuild for updated kernel
+
+* Thu Apr 12 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.5
+- rebuild for updated kernel
+
+* Sat Apr 07 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.4
+- rebuild for updated kernel
+
+* Tue Apr 03 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.3
+- rebuild for updated kernel
+
+* Fri Mar 30 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-1.2
+- rebuild for updated kernel
+=======
 * Mon Apr 30 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.3-2.1
 - make a few things more robust for drivers that have subdirectories (fixes 
   #2265)
 - enbable a few options r8192e driver needs since 3.3 
+>>>>>>> 1.51
 
 * Wed Mar 21 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.3-1.1
 - update to 3.3
