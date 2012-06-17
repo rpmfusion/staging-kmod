@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BCM_WIMAX EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U RTS5139 SLICOSS SOLO6X10 TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE W35UND PRISM2_USB VT6655 VT6656 XVMALLOC ZRAM ZCACHE 
+%global stgdrvs ASUS_OLED BCM_WIMAX EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U RTS5139 SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE USB_WPAN_HCD W35UND PRISM2_USB VT6655 VT6656 ZCACHE ZRAM ZSMALLOC
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -14,13 +14,14 @@
 # CXT1E1 
 # USBIP_CORE
 # DVB_CXD2099
+# RAMSTER
 
 # makes handling for rc kernels a whole lot easier:
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.3
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.9
+Version:       3.4.2
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -50,7 +51,7 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
-sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||; s|.*R8712U.*||;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -93,6 +94,9 @@ for kernel_version in %{?kernel_versions}; do
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.30.9 and 2.6.31.5
        ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
        ;;
+     SPEAKUP)
+        configops="${configops} CONFIG_SPEAKUP_SYNTH_ACNTSA=m CONFIG_SPEAKUP_SYNTH_ACNTPC=m CONFIG_SPEAKUP_SYNTH_APOLLO=m CONFIG_SPEAKUP_SYNTH_AUDPTR=m CONFIG_SPEAKUP_SYNTH_BNS=m CONFIG_SPEAKUP_SYNTH_DECTLK=m CONFIG_SPEAKUP_SYNTH_DECEXT=m CONFIG_SPEAKUP_SYNTH_DECPC=m CONFIG_SPEAKUP_SYNTH_DTLK=m CONFIG_SPEAKUP_SYNTH_KEYPC=m CONFIG_SPEAKUP_SYNTH_LTLK=m CONFIG_SPEAKUP_SYNTH_SOFT=m CONFIG_SPEAKUP_SYNTH_SPKOUT=m CONFIG_SPEAKUP_SYNTH_TXPRT=m CONFIG_SPEAKUP_SYNTH_DUMMY=m "
+       ;;
      VIDEO_GO7007)
        configops="${configops} CONFIG_${module}_USB=m"
        ;;
@@ -130,29 +134,14 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Tue Jun 05 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-2.9
-- Rebuilt for updated kernel
+* Sun Jun 17 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.4.2-1.1
+- Update to 3.4.2
+- Enable USB_WPAN_HCD 
+- disable XVMALLOC and enable replacement ZSMALLOC
+- disable R8712U, as it is enabled in Fedora
 
-* Sun May 27 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-2.8
-- Rebuilt for updated kernel
-
-* Sat May 26 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-2.7
-- Rebuilt for release kernel
-
-* Sun May 13 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-2.6
-- Rebuilt for release kernel
-
-* Wed May 09 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-2.5
-- rebuild for updated kernel
-
-* Sun May 06 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-2.4
-- rebuild for updated kernel
-
-* Sat May 05 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-2.3
-- rebuild for updated kernel
-
-* Wed May 02 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.3-2.2
-- rebuild for updated kernel
+* Sun May 20 2012 William F. Acker <wacker@octothorp.org>
+- enable Speakup
 
 * Mon Apr 30 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.3-2.1
 - make a few things more robust for drivers that have subdirectories (fixes 
