@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.5
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
