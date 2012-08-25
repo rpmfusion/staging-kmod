@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.5
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.4
+Release:       %{?prever:0.}3%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -93,7 +93,7 @@ for kernel_version in %{?kernel_versions}; do
        configops="${configops} CONFIG_R8712_AP=y"
        ;;
      RTL8192E)
-       configops="${configops} CONFIG_RTLLIB=m RTLLIB_CRYPTO_CCMP=m RTLLIB_CRYPTO_TKIP=m RTLLIB_CRYPTO_WEP=m "
+       configops="${configops} CONFIG_RTLLIB=m CONFIG_RTLLIB_CRYPTO_CCMP=m CONFIG_RTLLIB_CRYPTO_TKIP=m CONFIG_RTLLIB_CRYPTO_WEP=m "
        ;;
      USBIP_CORE)
        configops="${configops} CONFIG_USBIP_HOST=m CONFIG_USBIP_VHCI_HCD=m"
@@ -142,14 +142,8 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Wed Aug 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.5-2.4
-- Rebuilt for updated kernel
-
-* Thu Aug 16 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.5-2.3
-- Rebuilt for updated kernel
-
-* Sat Aug 11 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.5-2.2
-- Rebuilt for updated kernel
+* Sat Aug 25 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.5-3.1
+- Fix stupid thinko to make crypto stuff for rtl8192e work
 
 * Tue Jul 31 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.5-2.1
 - Fix zram
