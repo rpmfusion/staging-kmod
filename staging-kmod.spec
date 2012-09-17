@@ -21,7 +21,7 @@
 
 Name:          staging-kmod
 Version:       3.4.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.9
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -29,6 +29,8 @@ License:       GPLv2
 URL:           http://www.kernel.org/
 # a script to create this archive is part of staging-kmod-addons
 Source0:       linux-staging-%{version}%{?prever:-%{prever}}.tar.bz2
+# taken from http://driverdev.linuxdriverproject.org/pipermail/devel/2012-June/027381.html
+Patch1:        declare_zsmalloc_license_and_init_exit_functions.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{_bindir}/kmodtool
@@ -52,6 +54,10 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
 sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||; ' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+
+cd linux-staging-%{version}%{?prever:-%{prever}}
+%patch1  -p1
+cd -
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -88,7 +94,7 @@ for kernel_version in %{?kernel_versions}; do
        configops="${configops} CONFIG_R8712_AP=y"
        ;;
      RTL8192E)
-       configops="${configops} CONFIG_RTLLIB=m RTLLIB_CRYPTO_CCMP=m RTLLIB_CRYPTO_TKIP=m RTLLIB_CRYPTO_WEP=m "
+       configops="${configops} CONFIG_RTLLIB=m CONFIG_RTLLIB_CRYPTO_CCMP=m CONFIG_RTLLIB_CRYPTO_TKIP=m CONFIG_RTLLIB_CRYPTO_WEP=m "
        ;;
      SLICOSS)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.30.9 and 2.6.31.5
@@ -134,26 +140,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Sun Aug 26 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-1.9
-- Rebuilt for updated kernel
-
-* Thu Aug 16 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-1.8
-- Rebuilt for updated kernel
-
-* Tue Jul 31 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-1.7
-- Rebuilt for updated kernel
-
-* Thu Jul 26 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-1.6
-- Rebuilt for updated kernel
-
-* Tue Jul 17 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-1.5
-- Rebuilt for updated kernel
-
-* Fri Jul 06 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-1.4
-- Rebuilt for updated kernel
-
-* Thu Jun 28 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-1.3
-- Rebuilt for updated kernel
+* Mon Sep 17 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.4.2-2.1
+- Fix stupid thinko to make crypto stuff for rtl8192e work
+- Fix zram
 
 * Sat Jun 23 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.4.2-1.2
 - Enable R8712U for F16, as it is enabled in F17 only
