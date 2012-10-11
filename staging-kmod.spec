@@ -19,8 +19,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.5
-Release:       %{?prever:0.}3%{?prever:.%{prever}}%{?dist}.7
+Version:       3.6.1
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -28,8 +28,6 @@ License:       GPLv2
 URL:           http://www.kernel.org/
 # a script to create this archive is part of staging-kmod-addons
 Source0:       linux-staging-%{version}%{?prever:-%{prever}}.tar.bz2
-# taken from http://driverdev.linuxdriverproject.org/pipermail/devel/2012-June/027381.html
-Patch1:        declare_zsmalloc_license_and_init_exit_functions.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{_bindir}/kmodtool
@@ -53,10 +51,6 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
 sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||; s|.*R8712U.*||;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
-
-cd linux-staging-%{version}%{?prever:-%{prever}}
-%patch1  -p1
-cd -
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -142,23 +136,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Thu Oct 11 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.5-3.7
-- Rebuilt for updated kernel
-
-* Mon Oct 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.5-3.6
-- Rebuilt for updated kernel
-
-* Wed Oct 03 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.5-3.5
-- Rebuilt for updated kernel
-
-* Thu Sep 27 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.5-3.4
-- Rebuilt for updated kernel
-
-* Mon Sep 17 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.5-3.3
-- Rebuilt for updated kernel
-
-* Fri Aug 31 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.5-3.2
-- Rebuilt for updated kernel
+* Thu Oct 11 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.6.1-1
+- Update to 3.6.1
+- drop declare_zsmalloc_license_and_init_exit_functions.patch
 
 * Sat Aug 25 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.5-3.1
 - Fix stupid thinko to make crypto stuff for rtl8192e work
