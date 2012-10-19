@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BCM_WIMAX EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE R8712U RTL8192SU RTL8192E RTL8192U RTS5139 SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE USB_WPAN_HCD W35UND PRISM2_USB VT6655 VT6656 ZCACHE ZRAM ZSMALLOC
+%global stgdrvs ASUS_OLED BCM_WIMAX EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI IDE_PHISON LINE6_USB RTS_PSTOR RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U RTS5139 SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE USB_WPAN_HCD USBIP_CORE W35UND PRISM2_USB VT6655 VT6656 ZCACHE ZRAM ZSMALLOC
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -12,7 +12,6 @@
 # VIDEO_TM6000
 # VIDEO_DT3155 
 # CXT1E1 
-# USBIP_CORE
 # DVB_CXD2099
 # RAMSTER
 
@@ -20,8 +19,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.4.2
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.6
+Version:       3.6.1
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -29,8 +28,6 @@ License:       GPLv2
 URL:           http://www.kernel.org/
 # a script to create this archive is part of staging-kmod-addons
 Source0:       linux-staging-%{version}%{?prever:-%{prever}}.tar.bz2
-# taken from http://driverdev.linuxdriverproject.org/pipermail/devel/2012-June/027381.html
-Patch1:        declare_zsmalloc_license_and_init_exit_functions.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{_bindir}/kmodtool
@@ -53,11 +50,7 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
-sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||; ' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
-
-cd linux-staging-%{version}%{?prever:-%{prever}}
-%patch1  -p1
-cd -
+sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||; s|.*R8712U.*||;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -95,6 +88,9 @@ for kernel_version in %{?kernel_versions}; do
        ;;
      RTL8192E)
        configops="${configops} CONFIG_RTLLIB=m CONFIG_RTLLIB_CRYPTO_CCMP=m CONFIG_RTLLIB_CRYPTO_TKIP=m CONFIG_RTLLIB_CRYPTO_WEP=m "
+       ;;
+     USBIP_CORE)
+       configops="${configops} CONFIG_USBIP_HOST=m CONFIG_USBIP_VHCI_HCD=m"
        ;;
      SLICOSS)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.30.9 and 2.6.31.5
@@ -140,27 +136,25 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Thu Oct 18 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-2.6
+* Thu Oct 18 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.2
 - Rebuilt for updated kernel
 
-* Wed Oct 17 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-2.5
-- Rebuilt for updated kernel
+* Thu Oct 11 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.6.1-1
+- Update to 3.6.1
+- drop declare_zsmalloc_license_and_init_exit_functions.patch
 
-* Thu Oct 11 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-2.4
-- Rebuilt for updated kernel
-
-* Wed Oct 03 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-2.3
-- Rebuilt for updated kernel
-
-* Mon Sep 17 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.4.2-2.2
-- Rebuilt for updated kernel
-
-* Mon Sep 17 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.4.2-2.1
+* Sat Aug 25 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.5-3.1
 - Fix stupid thinko to make crypto stuff for rtl8192e work
+
+* Tue Jul 31 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.5-2.1
 - Fix zram
 
-* Sat Jun 23 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.4.2-1.2
-- Enable R8712U for F16, as it is enabled in F17 only
+* Tue Jul 31 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.5-1.1
+- Update to 3.5
+- Disable Mei, now a proper driver
+
+* Mon Jul 16 2012 Jonathan Dieter <jdieter@gmail.com> - 3.4.2-2.1
+- Enable USBIP
 
 * Sun Jun 17 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.4.2-1.1
 - Update to 3.4.2
