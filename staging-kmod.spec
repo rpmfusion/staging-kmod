@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BCM_WIMAX EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI IDE_PHISON  INTEL_MEI LINE6_USB RTS_PSTOR RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U RTS5139 SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE USB_WPAN_HCD W35UND PRISM2_USB VT6655 VT6656 ZCACHE ZRAM ZSMALLOC
+%global stgdrvs ASUS_OLED BCM_WIMAX EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI IDE_PHISON LINE6_USB RTS_PSTOR RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U RTS5139 SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE USB_WPAN_HCD USBIP_CORE W35UND PRISM2_USB VT6655 VT6656 ZCACHE ZRAM ZSMALLOC
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -12,7 +12,6 @@
 # VIDEO_TM6000
 # VIDEO_DT3155 
 # CXT1E1 
-# USBIP_CORE
 # DVB_CXD2099
 # RAMSTER
 
@@ -20,7 +19,7 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.4.2
+Version:       3.6.1
 Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
@@ -88,7 +87,10 @@ for kernel_version in %{?kernel_versions}; do
        configops="${configops} CONFIG_R8712_AP=y"
        ;;
      RTL8192E)
-       configops="${configops} CONFIG_RTLLIB=m RTLLIB_CRYPTO_CCMP=m RTLLIB_CRYPTO_TKIP=m RTLLIB_CRYPTO_WEP=m "
+       configops="${configops} CONFIG_RTLLIB=m CONFIG_RTLLIB_CRYPTO_CCMP=m CONFIG_RTLLIB_CRYPTO_TKIP=m CONFIG_RTLLIB_CRYPTO_WEP=m "
+       ;;
+     USBIP_CORE)
+       configops="${configops} CONFIG_USBIP_HOST=m CONFIG_USBIP_VHCI_HCD=m"
        ;;
      SLICOSS)
        # does not build on ppc and ppc64 as of 011109; tested with 2.6.30.9 and 2.6.31.5
@@ -134,6 +136,23 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Oct 11 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.6.1-1
+- Update to 3.6.1
+- drop declare_zsmalloc_license_and_init_exit_functions.patch
+
+* Sat Aug 25 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.5-3.1
+- Fix stupid thinko to make crypto stuff for rtl8192e work
+
+* Tue Jul 31 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.5-2.1
+- Fix zram
+
+* Tue Jul 31 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.5-1.1
+- Update to 3.5
+- Disable Mei, now a proper driver
+
+* Mon Jul 16 2012 Jonathan Dieter <jdieter@gmail.com> - 3.4.2-2.1
+- Enable USBIP
+
 * Sun Jun 17 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.4.2-1.1
 - Update to 3.4.2
 - Enable USB_WPAN_HCD 
