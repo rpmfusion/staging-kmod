@@ -19,8 +19,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.6.1
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.8
+Version:       3.7.2
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -136,26 +136,8 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Mon Jan 14 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.8
-- Rebuilt for updated kernel
-
-* Sun Jan 13 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.7
-- Rebuilt for updated kernel
-
-* Thu Jan 03 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.6
-- Rebuilt for f18 final kernel
-
-* Fri Dec 21 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.5
-- Rebuilt for current f18 kernel
-
-* Wed Dec 12 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.4
-- Rebuilt for current f18 kernel
-
-* Sun Nov 25 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.3
-- Rebuilt for current f18 kernel
-
-* Sun Nov 25 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.2
-- Rebuilt for Fedora 18 Beta kernel
+* Mon Jan 14 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.7.2-1
+- Update to 3.7.2
 
 * Thu Oct 11 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.6.1-1
 - Update to 3.6.1
