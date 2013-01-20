@@ -19,8 +19,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.6.1
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.16
+Version:       3.7.2
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -136,50 +136,8 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Sat Jan 19 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.16
-- Rebuilt for updated kernel
-
-* Thu Jan 17 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.15
-- Rebuilt for updated kernel
-
-* Wed Jan 09 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.14
-- Rebuilt for updated kernel
-
-* Sun Dec 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.13
-- Rebuilt for updated kernel
-
-* Sat Dec 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.12
-- Rebuilt for updated kernel
-
-* Tue Dec 18 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.11
-- Rebuilt for updated kernel
-
-* Wed Dec 12 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.10
-- Rebuilt for updated kernel
-
-* Wed Dec 05 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.9
-- Rebuilt for updated kernel
-
-* Wed Nov 28 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.8
-- Rebuilt for updated kernel
-
-* Wed Nov 21 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.7
-- Rebuilt for updated kernel
-
-* Tue Nov 20 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.6
-- Rebuilt for updated kernel
-
-* Thu Nov 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.5
-- Rebuilt for updated kernel
-
-* Thu Nov 01 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.4
-- Rebuilt for updated kernel
-
-* Tue Oct 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.3
-- Rebuilt for updated kernel
-
-* Thu Oct 18 2012 Nicolas Chauvet <kwizart@gmail.com> - 3.6.1-1.2
-- Rebuilt for updated kernel
+* Mon Jan 14 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.7.2-1
+- Update to 3.7.2
 
 * Thu Oct 11 2012 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.6.1-1
 - Update to 3.6.1
