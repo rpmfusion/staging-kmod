@@ -20,7 +20,7 @@
 
 Name:          staging-kmod
 Version:       3.7.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -136,6 +136,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Jan 25 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.2
+- Rebuilt for updated kernel
+
 * Mon Jan 14 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.7.2-1
 - Update to 3.7.2
 
