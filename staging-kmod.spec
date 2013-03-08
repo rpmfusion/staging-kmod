@@ -1,9 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BCM_WIMAX CSR_WIFI DGRP  ECHO ET131X  FB_XGI FT1000  IDE_PHISON LINE6_USB NET_VENDOR_SILICOM PRISM2_USB R8187SE RTL8192E RTL8192U RTS5139 SB105X SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZCACHE ZRAM ZSMALLOC
-
-# fixme: DVB_AS102 DVB_CXD2099 
+%global stgdrvs ASUS_OLED BCM_WIMAX EASYCAP ECHO EPL ET131X FB_UDL FB_XGI FT1000_USB  HECI IDE_PHISON LINE6_USB RTS_PSTOR RAMZSWAP R8187SE RTL8192SU RTL8192E RTL8192U RTS5139 SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_ENESTORAGE USB_WPAN_HCD USBIP_CORE W35UND PRISM2_USB VT6655 VT6656 ZCACHE ZRAM ZSMALLOC
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -21,8 +19,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.8.1
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
+Version:       3.7.2
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.11
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -52,7 +50,7 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
-sed -i '/.CRYSTALH/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.R8712U/ d; ' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+sed -i 's|.*DABUSB.*||; s|.*SE401.*||;  s|.*VICAM.*||; s|.CRYSTALH||; s|.*LIRC.*||; s|.*R8712U.*||;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -62,37 +60,31 @@ done
 
 %build
 for kernel_version in %{?kernel_versions}; do
- oldcount=0
- # sanity check: nothing should be build
- make %{?_smp_mflags} -C "${kernel_version##*___}" SUBDIRS=${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/
- newcount=$(find ${PWD}/_kmod_build_${kernel_version%%___*}/ -name '*.ko' | wc -l)
- if (( ${oldcount} != ${newcount} )); then
-   echo "Modules build when not should get build; aborting" >&2
-   exit 1
- fi
-
- # preparations
  for module in %{stgdrvs} ; do 
-   echo
-   echo "### ${module}"
-
-   # sanity check
-   if ! find . -name 'Makefile' | xargs grep "CONFIG_${module}"; then
-      echo "CONFIG_${module} does not exist; aborting"  >&2
-      exit 1
-   fi
-
-   # set options
    configops="CONFIG_${module}=m"
    case "${module}" in
-     CXT1E1)
-       configops="${configops} CONFIG_SBE_PMCC4_NCOMM=y"
+     CX25821)
+       configops="${configops} CONFIG_CX25821_ALSA=m"
        ;;
-     FT1000)
+     FT1000_USB)
        configops="${configops} CONFIG_FT1000_USB=m CONFIG_FT1000_PCMCIA=m"
        ;;
-     NET_VENDOR_SILICOM)
-       configops="${configops} CONFIG_SBYPASS=m CONFIG_BPCTL=m"
+     PRISM2_USB)
+       # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
+       ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
+       ;;
+     RAMZSWAP)
+       configops="${configops} CONFIG_RAMZSWAP_STATS=y"
+       ;;
+     RT3090)
+       configops="${configops} -I ${PWD}/_kmod_build_${kernel_version%%___*}/"
+       ;;
+     RTL8192SU)
+       # does not build on ppc and ppc64 as of 011109; tested with 2.6.31.5
+       ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
+       ;;
+     R8712U)
+       configops="${configops} CONFIG_R8712_AP=y"
        ;;
      RTL8192E)
        configops="${configops} CONFIG_RTLLIB=m CONFIG_RTLLIB_CRYPTO_CCMP=m CONFIG_RTLLIB_CRYPTO_TKIP=m CONFIG_RTLLIB_CRYPTO_WEP=m "
@@ -100,24 +92,29 @@ for kernel_version in %{?kernel_versions}; do
      USBIP_CORE)
        configops="${configops} CONFIG_USBIP_HOST=m CONFIG_USBIP_VHCI_HCD=m"
        ;;
+     SLICOSS)
+       # does not build on ppc and ppc64 as of 011109; tested with 2.6.30.9 and 2.6.31.5
+       ( [[ "%{_target_cpu}" == "ppc" ]] || [[ "%{_target_cpu}" == "ppc64" ]] ) && continue
+       ;;
      SPEAKUP)
         configops="${configops} CONFIG_SPEAKUP_SYNTH_ACNTSA=m CONFIG_SPEAKUP_SYNTH_ACNTPC=m CONFIG_SPEAKUP_SYNTH_APOLLO=m CONFIG_SPEAKUP_SYNTH_AUDPTR=m CONFIG_SPEAKUP_SYNTH_BNS=m CONFIG_SPEAKUP_SYNTH_DECTLK=m CONFIG_SPEAKUP_SYNTH_DECEXT=m CONFIG_SPEAKUP_SYNTH_DECPC=m CONFIG_SPEAKUP_SYNTH_DTLK=m CONFIG_SPEAKUP_SYNTH_KEYPC=m CONFIG_SPEAKUP_SYNTH_LTLK=m CONFIG_SPEAKUP_SYNTH_SOFT=m CONFIG_SPEAKUP_SYNTH_SPKOUT=m CONFIG_SPEAKUP_SYNTH_TXPRT=m CONFIG_SPEAKUP_SYNTH_DUMMY=m "
        ;;
-     WIMAX_GDM72XX)
-       # broken, as of 3.8.1: CONFIG_WIMAX_GDM72XX_QOS=y CONFIG_WIMAX_GDM72XX_SDIO=y  
-       configops="${configops} CONFIG_WIMAX_GDM72XX_WIMAX2=y CONFIG_WIMAX_GDM72XX_K_MODE=y CONFIG_WIMAX_GDM72XX_USB=y CONFIG_WIMAX_GDM72XX_USB_PM=y"
+     VIDEO_GO7007)
+       configops="${configops} CONFIG_${module}_USB=m"
+       ;;
+     VIDEO_CX25821)
+       configops="${configops} CONFIG_${module}_ALSA=m"
        ;;
    esac
 
-   make %{?_smp_mflags} -C "${kernel_version##*___}" SUBDIRS=${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/ modules CONFIG_STAGING_MEDIA=y ${configops}
+   make %{?_smp_mflags} -C "${kernel_version##*___}" SUBDIRS=${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/ modules ${configops}
 
-   # sanity check
-   newcount=$(find ${PWD}/_kmod_build_${kernel_version%%___*}/ -name '*.ko' | wc -l)
-   if (( ${oldcount} == ${newcount} )); then
-     echo "Seems no modules were build; aborting" >&2
-     exit 1
-   fi
-   oldcount=${newcount}
+   case "${module}" in
+     BRCMUTIL)
+       # move modules down one level to catch them during install
+       mv ${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/brcm80211/*/*.ko ${PWD}/_kmod_build_${kernel_version%%___*}/drivers/staging/brcm80211/
+       ;;
+   esac
  done
 done
 
@@ -139,15 +136,35 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Sat Mar 02 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.8.1-2
-- disable SBE_2T3E3 and CXT1E1, need something that is disabled in Fedora
+* Sat Mar 02 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.11
+- Rebuilt for kernel
 
-* Fri Mar 01 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.8.1-1
-- Update to 3.8.1
-- lot of misc small cleanups -- includes enabling a few more drivers and 
-  remove code and options not relevant anymore
-- add sanity check: make sure we do not built modules that are build by Fedora
-- add sanity check: make sure each config builds at least one ko file
+* Tue Feb 26 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.10
+- Rebuilt for kernel
+
+* Tue Feb 19 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.9
+- Rebuilt for kernel
+
+* Sat Feb 16 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.8
+- Rebuilt for kernel
+
+* Sat Feb 16 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.7
+- Rebuilt for kernel
+
+* Tue Feb 05 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.6
+- Rebuilt for kernel
+
+* Mon Feb 04 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.5
+- Rebuilt for akmod
+
+* Wed Jan 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.4
+- Rebuilt for akmod
+
+* Wed Jan 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.3
+- Rebuilt for updated kernel
+
+* Fri Jan 25 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.2
+- Rebuilt for updated kernel
 
 * Mon Jan 14 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.7.2-1
 - Update to 3.7.2
