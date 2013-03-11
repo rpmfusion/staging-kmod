@@ -21,13 +21,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-<<<<<<< staging-kmod.spec
-Version:       3.7.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.13
-=======
 Version:       3.8.1
 Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
->>>>>>> 1.87
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -144,40 +139,8 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-<<<<<<< staging-kmod.spec
-* Sun Mar 10 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.12
-Rebuilt for kernel
-
-* Sat Mar 02 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.11
-- Rebuilt for kernel
-
-* Tue Feb 26 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.10
-- Rebuilt for kernel
-
-* Tue Feb 19 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.9
-- Rebuilt for kernel
-
-* Sat Feb 16 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.8
-- Rebuilt for kernel
-
-* Sat Feb 16 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.7
-- Rebuilt for kernel
-
-* Tue Feb 05 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.6
-- Rebuilt for kernel
-
-* Mon Feb 04 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.5
-- Rebuilt for akmod
-
-* Wed Jan 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.4
-- Rebuilt for akmod
-
-* Wed Jan 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.7.2-1.3
-- Rebuilt for updated kernel
-=======
 * Sat Mar 02 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.8.1-2
 - disable SBE_2T3E3 and CXT1E1, need something that is disabled in Fedora
->>>>>>> 1.87
 
 * Fri Mar 01 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.8.1-1
 - Update to 3.8.1
