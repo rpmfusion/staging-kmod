@@ -22,7 +22,7 @@
 
 Name:          staging-kmod
 Version:       3.8.1
-Release:       %{?prever:0.}3%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}3%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -139,6 +139,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Apr 16 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-3.2
+- rebuild for updated kernel
+
 * Sat Apr 13 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.8.1-3
 - disable RTL8192E, now shipped upstream
 
