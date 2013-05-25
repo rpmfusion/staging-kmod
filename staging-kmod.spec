@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BCM_WIMAX CSR_WIFI DGRP  ECHO ET131X  FB_XGI FT1000  IDE_PHISON LINE6_USB NET_VENDOR_SILICOM PRISM2_USB R8187SE RTL8192E RTL8192U RTS5139 SB105X SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZCACHE ZRAM ZSMALLOC
+%global stgdrvs ASUS_OLED BCM_WIMAX CSR_WIFI DGRP  ECHO ET131X  FB_XGI FT1000 IDE_PHISON LINE6_USB NET_VENDOR_SILICOM PRISM2_USB R8187SE RTL8192U RTS5139 SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZCACHE ZRAM ZSMALLOC
 
 # fixme: DVB_AS102 DVB_CXD2099 
 
@@ -21,8 +21,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.8.1
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.13
+Version:       3.9.2
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.3
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -52,7 +52,7 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
-sed -i '/.CRYSTALH/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.R8712U/ d; ' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+sed -i '/.CRYSTALH/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.R8712U/ d; /.RTL8192E/ d; ' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -139,41 +139,19 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Sat May 25 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.13
+* Sat May 25 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.3
 - Rebuilt for kernel
 
-* Sun May 19 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.12
+* Wed May 22 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.2
 - Rebuilt for kernel
 
-* Thu May 09 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.11
-Rebuilt for kernel
+* Sat May 18 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.9.2-1
+- Update to 3.9.2
+- disable SB105X - does not compile
+- disable ZCACHE - latest version not buildable as module
 
-* Fri May 03 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.10
-- Rebuilt for kernel
-
-* Wed May 01 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.9
-- Rebuilt for kernel
-
-* Thu Apr 18 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.8
-- Rebuilt for kernel
-
-* Thu Apr 18 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.7
-- Rebuilt for kernel
-
-* Sat Apr 13 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.6
-- Rebuilt for kernel
-
-* Sun Mar 24 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.5
-- Rebuilt for kernel
-
-* Sat Mar 23 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.4
-- Rebuilt for akmod
-
-* Mon Mar 18 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.3
-- Rebuilt for kernel
-
-* Fri Mar 15 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.8.1-2.2
-- Rebuilt for kernel
+* Sat Apr 13 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.8.1-3
+- disable RTL8192E, now shipped upstream
 
 * Sat Mar 02 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.8.1-2
 - disable SBE_2T3E3 and CXT1E1, need something that is disabled in Fedora
@@ -374,7 +352,7 @@ Rebuilt for kernel
 - update to 2.6.34.2, which is hitting updates-testing for F13
 - enable phison (#1338)
 
-* Fri Apr 10 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.33.2-1
+* Sat Apr 10 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.33.2-1
 - update to 2.6.33.2
 - enable RAMZSWAP R8187SE RTL8192U BATMAN_ADV SAMSUNG_LAPTOP
 - disable RTL8187SE (renamed)
@@ -384,7 +362,7 @@ Rebuilt for kernel
 - update to 2.6.32.8 for updates-testing kernel
 - disable hv on ppc as it's useless and does not build
 
-* Sun Dec 02 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.32-0.1.rc1
+* Wed Dec 02 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.6.32-0.1.rc1
 - enable HYPERV, RT3090, RTL8192E, VT6656
 - drop AGNX, dropped upstream
 - point to drivers/staging/ explicitely 
