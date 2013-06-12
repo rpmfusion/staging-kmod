@@ -22,7 +22,7 @@
 
 Name:          staging-kmod
 Version:       3.9.2
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.3
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.4
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -139,6 +139,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Jun 12 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.4
+- Rebuilt for kernel
+
 * Sat May 25 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.3
 - Rebuilt for kernel
 
