@@ -21,8 +21,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.9.2
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.13
+Version:       3.10.5
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -139,41 +139,8 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Tue Aug 13 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.13
-- Rebuilt for kernel
-
-* Thu Aug 08 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.12
-- Rebuilt for kernel
-
-* Tue Jul 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.11
-- Rebuilt for kernel
-
-* Fri Jul 26 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.10
-- Rebuilt for kernel
-
-* Sat Jul 13 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.9
-- Rebuilt for kernel
-
-* Sat Jul 06 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.8
-- Rebuilt for kernel
-
-* Sun Jun 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.7
-- Rebuilt for kernel
-
-* Sat Jun 29 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.6
-- Rebuilt for kernel
-
-* Sat Jun 29 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.5
-- Rebuilt for current f19 kernel
-
-* Fri Jun 14 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.4
-- Rebuilt for current f19 kernel
-
-* Wed Jun 12 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.3
-- Rebuilt for current f19 kernel
-
-* Wed Jun 12 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.9.2-2.2
-- Rebuilt for kernel
+* Wed Aug 14 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.10.5-1
+- Update to 3.10.5
 
 * Sat May 18 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.9.2-1
 - Update to 3.9.2
