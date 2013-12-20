@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs ASUS_OLED BCM_WIMAX DGRP  ECHO ET131X  FB_XGI FT1000 IDE_PHISON LINE6_USB NET_VENDOR_SILICOM PRISM2_USB R8187SE RTL8192U RTS5139 SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZCACHE ZRAM ZSMALLOC
+%global stgdrvs BCM_WIMAX DGRP  ECHO ET131X  FB_XGI FT1000 IDE_PHISON LINE6_USB LTE_GDM724X NET_VENDOR_SILICOM PRISM2_USB R8187SE R8188EU RTL8192U RTS5139 SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZRAM ZSMALLOC
 
 # fixme: DVB_AS102 DVB_CXD2099 
 
@@ -21,8 +21,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.11.1
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.13
+Version:       3.12.6
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -97,6 +97,9 @@ for kernel_version in %{?kernel_versions}; do
      RTL8192E)
        configops="${configops} CONFIG_RTLLIB=m CONFIG_RTLLIB_CRYPTO_CCMP=m CONFIG_RTLLIB_CRYPTO_TKIP=m CONFIG_RTLLIB_CRYPTO_WEP=m "
        ;;
+     R8188EU)
+       configops="${configops} CONFIG_88EU_AP_MODE=Y CONFIG_88EU_P2P=Y"
+       ;;
      USBIP_CORE)
        configops="${configops} CONFIG_USBIP_HOST=m CONFIG_USBIP_VHCI_HCD=m"
        ;;
@@ -139,41 +142,10 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Fri Dec 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.13
-- Rebuilt for kernel
-
-* Tue Dec 03 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.12
-- Rebuilt for kernel
-
-* Thu Nov 21 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.11
-- Rebuilt for kernel
-
-* Thu Nov 14 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.10
-- Rebuilt for kernel
-
-* Mon Nov 04 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.9
-- Rebuilt for kernel
-
-* Mon Nov 04 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.8
-- Rebuilt for kernel
-
-* Tue Oct 22 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.7
-- Rebuilt for kernel
-
-* Mon Oct 14 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.6
-- Rebuilt for kernel
-
-* Fri Oct 11 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.5
-- Rebuilt for kernel
-
-* Fri Oct 04 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.4
-- Rebuilt for kernel
-
-* Tue Oct 01 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.3
-- Rebuilt for kernel
-
-* Sun Sep 29 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.11.1-1.2
-- Rebuilt for kernel
+* Fri Dec 20 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.12.6-1
+- Update to 3.12.6
+- drop ASUS_OLED, dropped upstream
+- enable LTE_GDM724X and R8188EU
 
 * Fri Sep 20 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.11.1-1
 - Update to 3.11.1
