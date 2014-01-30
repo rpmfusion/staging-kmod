@@ -1,9 +1,13 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs BCM_WIMAX DGRP  ECHO ET131X  FB_XGI FT1000 IDE_PHISON LINE6_USB LTE_GDM724X NET_VENDOR_SILICOM PRISM2_USB R8187SE R8188EU RTL8192U RTS5139 SLICOSS SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZRAM ZSMALLOC
+%global stgdrvs BCM_WIMAX DGRP  ECHO ET131X  FB_XGI FT1000 IDE_PHISON LINE6_USB LTE_GDM724X NET_VENDOR_SILICOM PRISM2_USB R8187SE R8188EU RTL8192U RTS5139 SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZRAM ZSMALLOC
 
-# fixme: DVB_AS102 DVB_CXD2099 
+%ifnarch %{arm}
+%global stgdrvs $stgdrvs SLICOSS
+%endif
+
+# fixme: DVB_AS102 DVB_CXD2099
 
 # avoid this error: 
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
@@ -22,7 +26,11 @@
 
 Name:          staging-kmod
 Version:       3.12.6
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.5
+<<<<<<< staging-kmod.spec
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.1
+=======
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.6
+>>>>>>> 1.32
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -52,7 +60,7 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
-sed -i '/.CRYSTALH/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.R8712U/ d; /.RTL8192E/ d; ' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+sed -i '/.CRYSTALH/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.R8712U/ d; /.RTL8192E/ d; /.IMX/ d; /.DWC2/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
@@ -142,6 +150,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Jan 30 2014 Nicolas Chauvet <kwizart@gmail.com>
+- Rebuilt for kernel
+
 * Tue Jan 28 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.12.6-1.5
 - Rebuilt for kernel
 
