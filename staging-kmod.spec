@@ -4,7 +4,7 @@
 %global stgdrvs BCM_WIMAX DGRP  ECHO ET131X  FB_XGI FT1000 IDE_PHISON LINE6_USB LTE_GDM724X NET_VENDOR_SILICOM PRISM2_USB R8187SE R8188EU RTL8192U RTS5139 SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZRAM ZSMALLOC
 
 %ifnarch %{arm}
-%global stgdrvs $stgdrvs SLICOSS
+%global stgdrvs %{stgdrvs} SLICOSS
 %endif
 
 # fixme: DVB_AS102 DVB_CXD2099
@@ -26,7 +26,7 @@
 
 Name:          staging-kmod
 Version:       3.12.6
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.6
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.7
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -146,6 +146,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Feb 10 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info>  - 3.12.6-2.7
+- fix thinko
+
 * Tue Jan 28 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.12.6-2.6
 - Rebuilt for kernel
 
