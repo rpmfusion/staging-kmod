@@ -2,7 +2,6 @@
 
 # which drivers to built
 %global stgdrvs BCM_WIMAX DGRP  ECHO ET131X  FB_XGI FT1000 IDE_PHISON LINE6_USB LTE_GDM724X NET_VENDOR_SILICOM PRISM2_USB R8187SE R8188EU RTL8192U RTS5139 SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZRAM ZSMALLOC
-
 %ifnarch %{arm}
 %global stgdrvs %{stgdrvs} SLICOSS
 %endif
@@ -25,15 +24,15 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.12.6
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.9
+Version:       3.13.3
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
 License:       GPLv2
 URL:           http://www.kernel.org/
 # a script to create this archive is part of staging-kmod-addons
-Source0:       linux-staging-%{version}%{?prever:-%{prever}}.tar.bz2
+Source0:       linux-staging-%{version}%{?prever:-%{prever}}.tar.xz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{_bindir}/kmodtool
@@ -58,10 +57,14 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
 sed -i '/.CRYSTALH/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.R8712U/ d; /.RTL8192E/ d; /.IMX/ d; /.DWC2/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
+# broken in 3.13
+sed -i 's!#include "dot11d.h"!#include "ieee80211/dot11d.h"!' linux-staging-%{version}/drivers/staging/rtl8192u/{r8192U_core.c,r8192U_wx.c,r819xU_phy.c}
+
 # seperate directories for each kernel variant (PAE, non-PAE, ...) we build the modules for
 for kernel_version in %{?kernel_versions} ; do
  cp -a linux-staging-%{version}%{?prever:-%{prever}}/ _kmod_build_${kernel_version%%___*}
 done
+
 
 
 %build
@@ -146,29 +149,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Sat Feb 15 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.12.6-2.9
-- Rebuilt for kernel
-
-* Wed Feb 12 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.12.6-2.8
-- Rebuilt for kernel
-
-* Mon Feb 10 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info>  - 3.12.6-2.7
-- fix thinko
-
-* Tue Jan 28 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.12.6-2.6
-- Rebuilt for kernel
-
-* Tue Jan 28 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.12.6-1.5
-- Rebuilt for kernel
-
-* Fri Jan 17 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.12.6-1.4
-- Rebuilt for kernel
-
-* Sun Jan 12 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.12.6-1.3
-- Rebuilt for kernel
-
-* Wed Dec 25 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.12.6-1.2
-- Rebuilt for kernel
+* Sat Feb 15 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.13.3-1
+- Update to 3.13.3
+- switch from bz2 to xz
 
 * Fri Dec 20 2013 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.12.6-1
 - Update to 3.12.6
