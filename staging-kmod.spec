@@ -1,9 +1,9 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs BCM_WIMAX DGRP  ECHO ET131X  FB_XGI FT1000 IDE_PHISON LINE6_USB LTE_GDM724X NET_VENDOR_SILICOM PRISM2_USB R8187SE R8188EU RTL8192U RTS5139 SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZRAM ZSMALLOC
+%global stgdrvs BCM_WIMAX DGRP  ECHO FB_XGI FT1000 IDE_PHISON LINE6_USB LTE_GDM724X NET_VENDOR_SILICOM PRISM2_USB R8187SE R8188EU RTL8192U RTS5139 SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2 ZRAM ZSMALLOC
 %ifnarch %{arm}
-%global stgdrvs %{stgdrvs} SLICOSS
+%global stgdrvs %{stgdrvs} SLICOSS ET131X
 %endif
 
 # fixme: DVB_AS102 DVB_CXD2099
@@ -25,7 +25,7 @@
 
 Name:          staging-kmod
 Version:       3.13.3
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.5
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.6
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -149,6 +149,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Mar 05 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.13.3-1.6
+- Drop ET131X on ARM lpae FTBFS
+
 * Tue Mar 04 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.13.3-1.5
 - Rebuilt for kernel
 
