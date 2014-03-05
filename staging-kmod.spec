@@ -25,7 +25,7 @@
 
 Name:          staging-kmod
 Version:       3.13.3
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.4
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.5
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -149,6 +149,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Mar 05 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.13.3-1.5
+- Rebuilt for kernel
+
 * Sat Feb 15 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.13.3-1
 - Update to 3.13.3
 - switch from bz2 to xz
