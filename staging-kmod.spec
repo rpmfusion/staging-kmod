@@ -25,7 +25,7 @@
 
 Name:          staging-kmod
 Version:       3.14.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.2
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -149,6 +149,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu May 08 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.14.2-1.2
+- Rebuilt for kernel
+
 * Wed Apr 30 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.14.2-1
 - Update to 3.14.2
 - remove ZRAM and ZSMALLOC, as they left staging
