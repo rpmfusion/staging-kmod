@@ -26,7 +26,7 @@
 
 Name:          staging-kmod
 Version:       3.15.4
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -150,6 +150,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Jul 17 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.15.4-1.1
+- Rebuilt for kernel
+
 * Sun Jul 13 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.15.4-1
 - Update to 3.15.4
 - drop ECHI and R8187SE (left)
