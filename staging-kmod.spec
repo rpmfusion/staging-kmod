@@ -26,7 +26,7 @@
 
 Name:          staging-kmod
 Version:       3.16.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -150,6 +150,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Sep 18 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.16.2-1.1
+- Rebuilt for kernel
+
 * Tue Sep 09 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.16.2-1
 - Update to 3.16.2
 - disable R8192EE here, enabled in Fedora
