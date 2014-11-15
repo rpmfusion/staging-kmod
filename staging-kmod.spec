@@ -1,7 +1,9 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs BCM_WIMAX DGRP FB_XGI FT1000 IDE_PHISON LINE6_USB LTE_GDM724X NET_VENDOR_SILICOM PRISM2_USB R8188EU RTL8192U  SOLO6X10 SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USB_WPAN_HCD USBIP_CORE VT6655 VT6656 WIMAX_GDM72XX WLAGS49_H25 W35UND WLAGS49_H2
+%global stgdrvs BCM_WIMAX FB_XGI FT1000 LINE6_USB LTE_GDM724X PRISM2_USB R8188EU RTL8192U SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_WPAN_HCD VT6655 VT6656 WIMAX_GDM72XX
+
+
 
 %ifnarch %{arm}
 %global stgdrvs %{stgdrvs} SLICOSS ET131X
@@ -25,8 +27,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.16.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.8
+Version:       3.17.2
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -93,23 +95,14 @@ for kernel_version in %{?kernel_versions}; do
    # set options
    configops="CONFIG_${module}=m"
    case "${module}" in
-     CXT1E1)
-       configops="${configops} CONFIG_SBE_PMCC4_NCOMM=y"
-       ;;
      FT1000)
        configops="${configops} CONFIG_FT1000_USB=m CONFIG_FT1000_PCMCIA=m"
-       ;;
-     NET_VENDOR_SILICOM)
-       configops="${configops} CONFIG_SBYPASS=m CONFIG_BPCTL=m"
        ;;
      RTL8192E)
        configops="${configops} CONFIG_RTLLIB=m CONFIG_RTLLIB_CRYPTO_CCMP=m CONFIG_RTLLIB_CRYPTO_TKIP=m CONFIG_RTLLIB_CRYPTO_WEP=m "
        ;;
      R8188EU)
        configops="${configops} CONFIG_88EU_AP_MODE=Y CONFIG_88EU_P2P=Y"
-       ;;
-     USBIP_CORE)
-       configops="${configops} CONFIG_USBIP_HOST=m CONFIG_USBIP_VHCI_HCD=m"
        ;;
      SPEAKUP)
         configops="${configops} CONFIG_SPEAKUP_SYNTH_ACNTSA=m CONFIG_SPEAKUP_SYNTH_ACNTPC=m CONFIG_SPEAKUP_SYNTH_APOLLO=m CONFIG_SPEAKUP_SYNTH_AUDPTR=m CONFIG_SPEAKUP_SYNTH_BNS=m CONFIG_SPEAKUP_SYNTH_DECTLK=m CONFIG_SPEAKUP_SYNTH_DECEXT=m CONFIG_SPEAKUP_SYNTH_DECPC=m CONFIG_SPEAKUP_SYNTH_DTLK=m CONFIG_SPEAKUP_SYNTH_KEYPC=m CONFIG_SPEAKUP_SYNTH_LTLK=m CONFIG_SPEAKUP_SYNTH_SOFT=m CONFIG_SPEAKUP_SYNTH_SPKOUT=m CONFIG_SPEAKUP_SYNTH_TXPRT=m CONFIG_SPEAKUP_SYNTH_DUMMY=m "
@@ -150,29 +143,11 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Mon Nov 10 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.16.2-1.8
-- Rebuilt for kernel
-
-* Fri Oct 31 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.16.2-1.7
-- Rebuilt for kernel
-
-* Tue Oct 28 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.16.2-1.6
-- Rebuilt for kernel
-
-* Thu Oct 16 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.16.2-1.5
-- Rebuilt for kernel
-
-* Fri Oct 10 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.16.2-1.4
-- Rebuilt for kernel
-
-* Tue Oct 07 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.16.2-1.3
-- Rebuilt for kernel
-
-* Fri Sep 19 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.16.2-1.2
-- Rebuilt for kernel
-
-* Thu Sep 18 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.16.2-1.1
-- Rebuilt for kernel
+* Sat Nov 15 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.17.2-1
+- Update to 3.17.2
+- drop drivers that werre dropped upstream: DGRP IDE_PHISON NET_VENDOR_SILICOM
+  SOLO6X10 TRANZPORT USB_ENESTORAGE USB_SERIAL_QUATECH2 USBIP_CORE  WLAGS49_H25
+  W35UND WLAGS49_H2
 
 * Tue Sep 09 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.16.2-1
 - Update to 3.16.2
