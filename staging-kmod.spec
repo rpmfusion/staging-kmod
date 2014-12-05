@@ -28,7 +28,7 @@
 
 Name:          staging-kmod
 Version:       3.17.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -143,6 +143,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Dec 05 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.17.2-1.1
+- Rebuilt for f21 final kernel
+
 * Sat Nov 15 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.17.2-1
 - Update to 3.17.2
 - drop drivers that werre dropped upstream: DGRP IDE_PHISON NET_VENDOR_SILICOM
