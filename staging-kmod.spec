@@ -2,11 +2,8 @@
 
 # which drivers to built
 %global stgdrvs BCM_WIMAX FB_XGI FT1000 LINE6_USB LTE_GDM724X PRISM2_USB R8188EU RTL8192U SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_WPAN_HCD VT6655 VT6656 WIMAX_GDM72XX
-
-
-
 %ifnarch %{arm}
-%global stgdrvs %{stgdrvs} SLICOSS ET131X
+%global stgdrvs %{stgdrvs} SLICOSS 
 %endif
 
 # fixme: DVB_AS102 DVB_CXD2099
@@ -15,20 +12,12 @@
 # /usr/lib/rpm/debugedit: canonicalization unexpectedly shrank by one character
 %define debug_package %{nil}
 
-# todo?
-# VIDEO_CX25821
-# VIDEO_TM6000
-# VIDEO_DT3155 
-# CXT1E1 
-# DVB_CXD2099
-# RAMSTER
-
 # makes handling for rc kernels a whole lot easier:
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.17.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.4
+Version:       3.18.2
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -98,9 +87,6 @@ for kernel_version in %{?kernel_versions}; do
      FT1000)
        configops="${configops} CONFIG_FT1000_USB=m CONFIG_FT1000_PCMCIA=m"
        ;;
-     RTL8192E)
-       configops="${configops} CONFIG_RTLLIB=m CONFIG_RTLLIB_CRYPTO_CCMP=m CONFIG_RTLLIB_CRYPTO_TKIP=m CONFIG_RTLLIB_CRYPTO_WEP=m "
-       ;;
      R8188EU)
        configops="${configops} CONFIG_88EU_AP_MODE=Y CONFIG_88EU_P2P=Y"
        ;;
@@ -143,17 +129,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Sat Jan 10 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.17.2-1.4
-- Rebuilt for kernel
-
-* Fri Dec 19 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.17.2-1.3
-- Rebuilt for kernel
-
-* Sun Dec 14 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.17.2-1.2
-- Rebuilt for kernel
-
-* Fri Dec 05 2014 Nicolas Chauvet <kwizart@gmail.com> - 3.17.2-1.1
-- Rebuilt for f21 final kernel
+* Sun Jan 11 2015 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.18.2-1
+- Update to 3.18.2
+- drop ET131X, dropped upstream
 
 * Sat Nov 15 2014 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.17.2-1
 - Update to 3.17.2
