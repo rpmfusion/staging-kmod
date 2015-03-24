@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs BCM_WIMAX FB_XGI FT1000 LINE6_USB LTE_GDM724X PRISM2_USB R8188EU RTL8192U SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_WPAN_HCD VT6655 VT6656 WIMAX_GDM72XX
+%global stgdrvs FB_XGI FT1000 LINE6_USB LTE_GDM724X PRISM2_USB R8188EU RTL8192U SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_WPAN_HCD VT6655 VT6656 WIMAX_GDM72XX
 %ifnarch %{arm}
 %global stgdrvs %{stgdrvs} SLICOSS 
 %endif
@@ -16,8 +16,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.18.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.10
+Version:       3.19.2
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -47,7 +47,7 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
-sed -i '/.CRYSTALH/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.R8712U/ d; /.RTL8192E/ d; /.R8192EE/ d; /.R8723AU/ d; /.IMX/ d; /.DWC2/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+sed -i '/.CRYSTALH/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.R8712U/ d; /.RTL8192E/ d; /.R8192EE/ d; /.R8723AU/ d; /.IMX/ d; /.DWC2/ d; /.VIDEO_TLG2300/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
 # broken in 3.13
 sed -i 's!#include "dot11d.h"!#include "ieee80211/dot11d.h"!' linux-staging-%{version}/drivers/staging/rtl8192u/{r8192U_core.c,r8192U_wx.c,r819xU_phy.c}
@@ -129,35 +129,10 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Mon Mar 23 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.18.2-1.10
-- Rebuilt for kernel
-
-* Sat Mar 21 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.18.2-1.9
-- Rebuilt for kernel
-
-* Tue Mar 10 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.18.2-1.8
-- Rebuilt for kernel
-
-* Fri Mar 06 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.18.2-1.7
-- Rebuilt for kernel
-
-* Sat Feb 14 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.18.2-1.6
-- Rebuilt for kernel
-
-* Sun Feb 08 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.18.2-1.5
-- Rebuilt for kernel
-
-* Wed Feb 04 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.18.2-1.4
-- Rebuilt for kernel
-
-* Mon Feb 02 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.18.2-1.3
-- Rebuilt for kernel
-
-* Wed Jan 21 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.18.2-1.2
-- Rebuilt for kernel
-
-* Thu Jan 15 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.18.2-1.1
-- Rebuilt for kernel
+* Tue Mar 24 2015 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.19.2-1
+- Update to 3.19.2
+- Drop BCM_WIMAX, dropped upstream
+- Disable VIDEO_TLG2300, which is enabled in Fedora
 
 * Sun Jan 11 2015 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.18.2-1
 - Update to 3.18.2
