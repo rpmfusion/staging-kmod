@@ -17,7 +17,7 @@
 
 Name:          staging-kmod
 Version:       3.19.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -129,6 +129,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Mar 27 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-1.1
+- Rebuilt for kernel
+
 * Tue Mar 24 2015 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.19.2-1
 - Update to 3.19.2
 - Drop BCM_WIMAX, dropped upstream
