@@ -17,7 +17,7 @@
 
 Name:          staging-kmod
 Version:       3.19.2
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -46,8 +46,8 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 # prepare
 %setup -q -c -T -a 0
 
-# disable drivers that are enabled in Fedora's kernel, as those otherweise would get build
-sed -i '/.CRYSTALH/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.R8712U/ d; /.RTL8192E/ d; /.R8192EE/ d; /.R8723AU/ d; /.IMX/ d; /.DWC2/ d; /.VIDEO_TLG2300/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+# disable drivers that are enabled in Fedora's kernel or not yet relevant, as those otherweise would get build
+sed -i '/.COMMON_CLK_XLNX_CLKWZRD/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.MTD_SPINAND/ d; /.R8712U/ d; /.RTL8192E/ d; /.R8192EE/ d; /.R8723AU/ d; /.SENSORS_ISL29/ d; /.IMX/ d; /.DWC2/ d; /.VIDEO_TLG2300/ d; /.GS_FPGABOOT/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
 # broken in 3.13
 sed -i 's!#include "dot11d.h"!#include "ieee80211/dot11d.h"!' linux-staging-%{version}/drivers/staging/rtl8192u/{r8192U_core.c,r8192U_wx.c,r819xU_phy.c}
@@ -129,6 +129,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Apr  8 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-2
+- Update for ARM
+
 * Tue Mar 24 2015 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 3.19.2-1
 - Update to 3.19.2
 - Drop BCM_WIMAX, dropped upstream
