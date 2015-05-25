@@ -1,7 +1,7 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs FB_XGI FT1000 LINE6_USB LTE_GDM724X PRISM2_USB R8188EU RTL8192U SPEAKUP TOUCHSCREEN_CLEARPAD_TM1217 TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_WPAN_HCD VT6655 VT6656 WIMAX_GDM72XX
+%global stgdrvs FB_XGI FT1000 LTE_GDM724X PRISM2_USB R8188EU RTL8192U SPEAKUP TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_WPAN_HCD VT6655 VT6656 WIMAX_GDM72XX
 %ifnarch %{arm}
 %global stgdrvs %{stgdrvs} SLICOSS 
 %endif
@@ -16,8 +16,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       3.19.2
-Release:       %{?prever:0.}2%{?prever:.%{prever}}%{?dist}.6
+Version:       4.0.4
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -129,23 +129,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Sun May 24 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-2.6
-- Rebuilt for kernel
-
-* Wed May 13 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-2.5
-- Rebuilt for kernel
-
-* Sat May 09 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-2.4
-- Rebuilt for kernel
-
-* Sat May 02 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-2.3
-- Rebuilt for kernel
-
-* Wed Apr 22 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-2.2
-- Rebuilt for kernel
-
-* Wed Apr 15 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-2.1
-- Rebuilt for kernel
+* Mon May 25 2015 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 4.0.4-1
+- Update to 4.0.4
+- Drop LINE6_USB and TOUCHSCREEN_CLEARPAD_TM1217 (dropped upstream)
 
 * Wed Apr  8 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-2
 - Update for ARM
