@@ -47,7 +47,7 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel or not yet relevant, as those otherweise would get build
-sed -i '/.COMMON_CLK_XLNX_CLKWZRD/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.MTD_SPINAND/ d; /.R8712U/ d; /.RTL8192E/ d; /.R8192EE/ d; /.R8723AU/ d; /.SENSORS_ISL29/ d; /.IMX/ d; /.DWC2/ d; /.VIDEO_TLG2300/ d; /.GS_FPGABOOT/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+sed -i '/.COMMON_CLK_XLNX_CLKWZRD/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.MTD_SPINAND/ d; /.R8712U/ d; /.RTL8192E/ d; /.R8192EE/ d; /.R8723AU/ d; /.SENSORS_ISL29/ d; /.IMX/ d; /.DWC2/ d; /.VIDEO_TLG2300/ d; /.GS_FPGABOOT/ d; /.I2O/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
 # broken in 3.13
 sed -i 's!#include "dot11d.h"!#include "ieee80211/dot11d.h"!' linux-staging-%{version}/drivers/staging/rtl8192u/{r8192U_core.c,r8192U_wx.c,r819xU_phy.c}
@@ -132,6 +132,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon May 25 2015 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 4.0.4-1
 - Update to 4.0.4
 - Drop LINE6_USB and TOUCHSCREEN_CLEARPAD_TM1217 (dropped upstream)
+- Disable I2O (enabled in Fedora-x86-32)
 
 * Wed Apr  8 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-2
 - Update for ARM
