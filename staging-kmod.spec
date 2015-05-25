@@ -47,7 +47,7 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 %setup -q -c -T -a 0
 
 # disable drivers that are enabled in Fedora's kernel or not yet relevant, as those otherweise would get build
-sed -i '/.COMMON_CLK_XLNX_CLKWZRD/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.MTD_SPINAND/ d; /.R8712U/ d; /.RTL8192E/ d; /.R8192EE/ d; /.R8723AU/ d; /.SENSORS_ISL29/ d; /.IMX/ d; /.DWC2/ d; /.VIDEO_TLG2300/ d; /.GS_FPGABOOT/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+sed -i '/.COMMON_CLK_XLNX_CLKWZRD/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.MTD_SPINAND/ d; /.R8712U/ d; /.RTL8192E/ d; /.R8192EE/ d; /.R8723AU/ d; /.SENSORS_ISL29/ d; /.IMX/ d; /.DWC2/ d; /.VIDEO_TLG2300/ d; /.GS_FPGABOOT/ d; /.I2O/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
 
 # broken in 3.13
 sed -i 's!#include "dot11d.h"!#include "ieee80211/dot11d.h"!' linux-staging-%{version}/drivers/staging/rtl8192u/{r8192U_core.c,r8192U_wx.c,r819xU_phy.c}
