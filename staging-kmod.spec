@@ -1,9 +1,9 @@
 # akmods not supported
 
 # which drivers to built
-%global stgdrvs FB_XGI FT1000 LTE_GDM724X PRISM2_USB R8188EU RTL8192U SPEAKUP TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_WPAN_HCD VT6655 VT6656 WIMAX_GDM72XX
+%global stgdrvs FB_XGI FT1000 LTE_GDM724X PRISM2_USB RTL8192U SPEAKUP TOUCHSCREEN_SYNAPTICS_I2C_RMI4 USB_WPAN_HCD VT6655 VT6656 WIMAX_GDM72XX
 %ifnarch %{arm}
-%global stgdrvs %{stgdrvs} SLICOSS 
+%global stgdrvs %{stgdrvs} SLICOSS R8188EU
 %endif
 
 # fixme: DVB_AS102 DVB_CXD2099
@@ -17,7 +17,7 @@
 
 Name:          staging-kmod
 Version:       4.0.4
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.1
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -48,6 +48,11 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --newest %
 
 # disable drivers that are enabled in Fedora's kernel or not yet relevant, as those otherweise would get build
 sed -i '/.COMMON_CLK_XLNX_CLKWZRD/ d; /.FIREWIRE_SERIAL/ d;  /.LIRC/ d; /.MTD_SPINAND/ d; /.R8712U/ d; /.RTL8192E/ d; /.R8192EE/ d; /.R8723AU/ d; /.SENSORS_ISL29/ d; /.IMX/ d; /.DWC2/ d; /.VIDEO_TLG2300/ d; /.GS_FPGABOOT/ d; /.I2O/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+
+# Disable specifically for arm
+%ifarch %{arm} aarch64
+sed -i '/.R8188EU/ d;' $(find linux-staging-%{version}%{?prever:-%{prever}}/drivers/staging/ -name 'Makefile')
+%endif
 
 # broken in 3.13
 sed -i 's!#include "dot11d.h"!#include "ieee80211/dot11d.h"!' linux-staging-%{version}/drivers/staging/rtl8192u/{r8192U_core.c,r8192U_wx.c,r819xU_phy.c}
@@ -88,7 +93,7 @@ for kernel_version in %{?kernel_versions}; do
        configops="${configops} CONFIG_FT1000_USB=m CONFIG_FT1000_PCMCIA=m"
        ;;
      R8188EU)
-       configops="${configops} CONFIG_88EU_AP_MODE=Y CONFIG_88EU_P2P=Y"
+       configops="${configops} CONFIG_88EU_AP_MODE=y"
        ;;
      SPEAKUP)
         configops="${configops} CONFIG_SPEAKUP_SYNTH_ACNTSA=m CONFIG_SPEAKUP_SYNTH_ACNTPC=m CONFIG_SPEAKUP_SYNTH_APOLLO=m CONFIG_SPEAKUP_SYNTH_AUDPTR=m CONFIG_SPEAKUP_SYNTH_BNS=m CONFIG_SPEAKUP_SYNTH_DECTLK=m CONFIG_SPEAKUP_SYNTH_DECEXT=m CONFIG_SPEAKUP_SYNTH_DECPC=m CONFIG_SPEAKUP_SYNTH_DTLK=m CONFIG_SPEAKUP_SYNTH_KEYPC=m CONFIG_SPEAKUP_SYNTH_LTLK=m CONFIG_SPEAKUP_SYNTH_SOFT=m CONFIG_SPEAKUP_SYNTH_SPKOUT=m CONFIG_SPEAKUP_SYNTH_TXPRT=m CONFIG_SPEAKUP_SYNTH_DUMMY=m "
@@ -129,6 +134,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue May 26 2015 Nicolas Chauvet <kwizart@gmail.com> - 4.0.4-1.1
+- Fix build on ARM
+
 * Mon May 25 2015 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 4.0.4-1
 - Update to 4.0.4
 - Drop LINE6_USB and TOUCHSCREEN_CLEARPAD_TM1217 (dropped upstream)
