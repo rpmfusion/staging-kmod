@@ -140,6 +140,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon May 25 2015 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 4.0.4-1
 - Update to 4.0.4
 - Drop LINE6_USB and TOUCHSCREEN_CLEARPAD_TM1217 (dropped upstream)
+- Disable I2O (enabled in Fedora-x86-32)
 
 * Wed Apr  8 2015 Nicolas Chauvet <kwizart@gmail.com> - 3.19.2-2
 - Update for ARM
