@@ -16,8 +16,8 @@
 #global prever rc8
 
 Name:          staging-kmod
-Version:       4.0.4
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.8
+Version:       4.1.4
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -134,26 +134,8 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Thu Jul 30 2015 Nicolas Chauvet <kwizart@gmail.com> - 4.0.4-1.8
-- Rebuilt for kernel
-
-* Fri Jul 24 2015 Nicolas Chauvet <kwizart@gmail.com> - 4.0.4-1.7
-- Rebuilt for kernel
-
-* Thu Jul 16 2015 Nicolas Chauvet <kwizart@gmail.com> - 4.0.4-1.6
-- Rebuilt for kernel
-
-* Thu Jul 02 2015 Nicolas Chauvet <kwizart@gmail.com> - 4.0.4-1.5
-- Rebuilt for kernel
-
-* Sun Jun 28 2015 Nicolas Chauvet <kwizart@gmail.com> - 4.0.4-1.4
-- Rebuilt for kernel
-
-* Wed Jun 10 2015 Nicolas Chauvet <kwizart@gmail.com> - 4.0.4-1.3
-- Rebuilt for kernel
-
-* Tue Jun 02 2015 Nicolas Chauvet <kwizart@gmail.com> - 4.0.4-1.2
-- Rebuilt for kernel
+* Tue Aug 4 2015 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 4.1.4-1
+- Update to 4.1.4
 
 * Tue May 26 2015 Nicolas Chauvet <kwizart@gmail.com> - 4.0.4-1.1
 - Fix build on ARM
