@@ -17,7 +17,7 @@
 
 Name:          staging-kmod
 Version:       4.1.4
-Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.6
+Release:       %{?prever:0.}1%{?prever:.%{prever}}%{?dist}.7
 Summary:       Selected kernel modules from linux-staging
 
 Group:         System Environment/Kernel
@@ -134,6 +134,9 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Mar 20 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 4.1.4-1.7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Tue Oct 06 2015 Nicolas Chauvet <kwizart@gmail.com> - 4.1.4-1.6
 - Rebuilt for kernel
 
